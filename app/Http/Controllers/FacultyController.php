@@ -19,9 +19,9 @@ class FacultyController extends Controller
         $this->facultyService = $facultyService;
         $this->departmentService = $departmentService;
 
-        $this->middleware('permission:faculty-list', ['only' => ['index']]);
+        $this->middleware('permission:faculty-read', ['only' => ['index']]);
         $this->middleware('permission:faculty-create', ['only' => ['store']]);
-        $this->middleware('permission:faculty-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:faculty-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:faculty-delete', ['only' => ['delete']]);
     }
 

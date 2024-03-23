@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
@@ -20,9 +21,9 @@ class RoleController extends Controller
      */
     function __construct()
     {
-        $this->middleware('permission:role-list', ['only' => ['index']]);
+        $this->middleware('permission:role-read', ['only' => ['index']]);
         $this->middleware('permission:role-create', ['only' => ['create', 'store']]);
-        $this->middleware('permission:role-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:role-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:role-delete', ['only' => ['destroy']]);
     }
 
@@ -38,15 +39,16 @@ class RoleController extends Controller
         // $permission = Permission::get();
 
         $modules = [
-            'Dashboard' => ['dashboard'],
-            'Role Management' => ['role-list', 'role-create', 'role-edit', 'role-delete'],
-            'User Management' => ['user-list', 'user-create', 'user-edit', 'user-delete'],
-            'Period Management' => ['period-list', 'period-create', 'period-edit', 'period-delete'],
-            'Class Management' => ['class-list', 'class-create', 'class-edit', 'class-delete'],
-            'Department Management' => ['department-list', 'department-create', 'department-edit', 'department-delete'],
-            'Faculty Management' => ['faculty-list', 'faculty-create', 'faculty-edit', 'faculty-delete'],
-            'Subject Management' => ['subject-list', 'subject-create', 'subject-edit', 'subject-delete'],
-            'Settings' => ['settings-list', 'settings-update'],
+            'Dashboard' => ['dashboard-read'],
+            'Role Management' => ['role-read', 'role-create', 'role-update', 'role-delete'],
+            'User Management' => ['user-read', 'user-create', 'user-update', 'user-delete'],
+            'Period Management' => ['period-read', 'period-create', 'period-update', 'period-delete'],
+            'Class Management' => ['class-read', 'class-create', 'class-update', 'class-delete'],
+            'Department Management' => ['department-read', 'department-create', 'department-update', 'department-delete'],
+            'Faculty Management' => ['faculty-read', 'faculty-create', 'faculty-update', 'faculty-delete'],
+            'Subject Management' => ['subject-read', 'subject-create', 'subject-update', 'subject-delete'],
+            'Student Management' => ['student-read', 'student-create', 'student-update', 'student-delete', 'student-import'],
+            'Settings' => ['settings-read', 'settings-update'],
         ];
         $groupedPermissions = [];
         foreach ($modules as $module => $permissions) {
@@ -56,23 +58,25 @@ class RoleController extends Controller
         return view('admin.roles.index', compact('pageTitle', 'roles', 'groupedPermissions'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function list()
+    {
+        if (request()->ajax()) {
+            $data = Role::get();
+            return (new DataTables)->of($data)
+                ->addColumn('roles', function ($row) {
+                    return $row->name;
+                })
+                ->make(true);
+        }
+    }
+
     public function create()
     {
         $permission = Permission::get();
         return view('admin.roles.create', compact(['permission']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -93,15 +97,9 @@ class RoleController extends Controller
 
         $role->syncPermissions($request->input('permission'));
 
-        return redirect()->route('roles.index')
-            ->with('success', 'Role created successfully');
+        return response()->json(['success' => true]);
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         $role = Role::find($id);
@@ -112,30 +110,22 @@ class RoleController extends Controller
         return view('admin.roles.show', compact('role', 'rolePermissions'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $role = Role::find($id);
         $permission = Permission::get();
-        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id", $id)
-            ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
-            ->all();
+        $rolePermissions = DB::table("role_has_permissions")
+            ->where("role_has_permissions.role_id", $id)
+            ->pluck('role_has_permissions.permission_id')
+            ->toArray();
 
-        return view('admin.roles.edit', compact('role', 'permission', 'rolePermissions'));
+        return response()->json([
+            'role' => $role,
+            'permissions' => $permission,
+            'rolePermissions' => $rolePermissions,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $this->validate($request, [
@@ -149,15 +139,9 @@ class RoleController extends Controller
 
         $role->syncPermissions($request->input('permission'));
 
-        return redirect()->route('roles.index')
-            ->with('success', 'Role updated successfully');
+        return response()->json(['success' => true]);
     }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         try {

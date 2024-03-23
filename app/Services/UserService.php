@@ -14,7 +14,7 @@ class UserService
 
     public function getAllUserExcludingLoggedInUser($userId)
     {
-        return User::where('id', '!=', $userId)->get();
+        return User::with('faculty', 'student')->where('id', '!=', $userId)->get();
     }
 
     public function getAllUser()

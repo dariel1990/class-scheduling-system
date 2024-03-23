@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('subject_id')->references('id')->on('subjects')->restrictOnDelete();
             $table->foreignId('faculty_id')->references('id')->on('faculties')->restrictOnDelete();
             $table->foreignId('class_id')->references('id')->on('classes')->restrictOnDelete();
-            $table->integer('student_population');
+            $table->integer('student_population')->nullable();
             $table->timestamps();
         });
     }

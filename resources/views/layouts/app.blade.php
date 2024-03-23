@@ -162,6 +162,14 @@
                                 <span key="t-calendar">Dashboard</span>
                             </a>
                         </li>
+                        <li class="menu-title">Main Module</li>
+                        <li>
+                            <a href="{{ route('class-schedules.index') }}" class="waves-effect">
+                                <i class="bx bx-timer"></i>
+                                <span key="t-calendar">CLASS SCHEDULER</span>
+                            </a>
+                        </li>
+                        <li class="menu-title">Maintenance</li>
                         <li>
                             <a href="{{ route('academic.year') }}" class="waves-effect">
                                 <i class="bx bx-calendar"></i>
@@ -172,6 +180,12 @@
                             <a href="{{ route('department.index') }}" class="waves-effect">
                                 <i class="bx bx-building"></i>
                                 <span key="t-calendar">Departments</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('faculty.index') }}" class="waves-effect">
+                                <i class="bx bx-user-circle"></i>
+                                <span key="t-calendar">Faculties</span>
                             </a>
                         </li>
                         <li>
@@ -190,12 +204,6 @@
                             <a href="{{ route('room.index') }}" class="waves-effect">
                                 <i class="bx bx-home-alt"></i>
                                 <span key="t-calendar">Rooms</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('faculty.index') }}" class="waves-effect">
-                                <i class="bx bx-user-circle"></i>
-                                <span key="t-calendar">Faculties</span>
                             </a>
                         </li>
                     </ul>
@@ -261,6 +269,7 @@
         </div>
     </main>
     <script src="{{ asset('/assets/libs/jquery/jquery.min.js') }}"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="{{ asset('/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('/assets/libs/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('/assets/libs/simplebar/simplebar.min.js') }}"></script>

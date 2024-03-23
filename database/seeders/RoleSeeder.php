@@ -16,43 +16,48 @@ class RoleSeeder extends Seeder
     {
         $adminRole = Role::firstOrCreate(['name' => 'Admin']);
         $adminPermissions = [
-            'dashboard',
-            'role-list',
+            'dashboard-read',
+            'role-read',
             'role-create',
-            'role-edit',
+            'role-update',
             'role-delete',
-            'user-list',
+            'user-read',
             'user-create',
-            'user-edit',
+            'user-update',
             'user-delete',
-            'period-list',
+            'period-read',
             'period-create',
-            'period-edit',
+            'period-update',
             'period-delete',
-            'class-list',
+            'class-read',
             'class-create',
-            'class-edit',
+            'class-update',
             'class-delete',
-            'department-list',
+            'department-read',
             'department-create',
-            'department-edit',
+            'department-update',
             'department-delete',
-            'faculty-list',
+            'faculty-read',
             'faculty-create',
-            'faculty-edit',
+            'faculty-update',
             'faculty-delete',
-            'subject-list',
+            'subject-read',
             'subject-create',
-            'subject-edit',
+            'subject-update',
             'subject-delete',
-            'dashboard',
-            'settings-list',
-            'settings-update'
+            'settings-read',
+            'settings-update',
+            'student-read',
+            'student-create',
+            'student-update',
+            'student-delete',
+            'student-import',
         ];
         foreach ($adminPermissions as $permission) {
             $adminRole->givePermissionTo($permission);
         }
 
         $facultyRole = Role::firstOrCreate(['name' => 'Faculty']);
+        $facultyRole = Role::firstOrCreate(['name' => 'Student']);
     }
 }

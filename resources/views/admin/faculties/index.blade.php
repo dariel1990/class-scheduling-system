@@ -25,13 +25,18 @@
         <div class="col-xxl-12 col-xl-12 col-lg-12 box-col-12">
             <div class="card">
                 <div class="card-header bg-transaparent border-primary border-bottom border-5 text-uppercase">
-                    <h3 class="mt-2">Faculties</h3>
-                </div>
-                <div class="card-body p-2">
-                    <div class="py-2 text-end">
-                        <button type="button" class="btn btn-primary text-uppercase" id="btnAddNewRecord"> Add New
-                            Record </button>
+                    <div class="row">
+                        <div class="col-6">
+                            <h3 class="mt-2">Faculties</h3>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button type="button" class="btn btn-primary text-uppercase" id="btnAddNewRecord">
+                                Add New Record
+                            </button>
+                        </div>
                     </div>
+                </div>
+                <div class="card-body p-4">
                     <div class="row">
                         <div class="col-sm-12 col-lg-12 col-xl-12">
                             <table class="table table-bordered w-100" id="dataTable">
@@ -179,13 +184,13 @@
                     processing: true,
                     destroy: true,
                     ordering: false,
-                    dom: "<'myfilter'f><'mylength'l>t",
+                    dom: "<'myfilter'f><'mylength'l>tp",
                     language: {
                         processing: '<i class="text-primary fa fa-spinner fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>',
                     },
                     ajax: `/faculty/list`,
                     columns: [{
-                            class: 'align-middle text-center',
+                            class: 'align-middle text-start',
                             data: 'fullname',
                             name: 'fullname',
                             searchable: true,
@@ -206,7 +211,7 @@
                             orderable: false
                         },
                         {
-                            class: 'align-middle text-center',
+                            class: 'align-middle text-start',
                             data: 'department',
                             name: 'department',
                             searchable: true,
@@ -221,9 +226,9 @@
                             render: function(_, _, data, row) {
                                 return `
                                     <td class='text-center align-middle'>
-                                        <button class="btn btn-primary btn-sm edit-record me-1" data-key="${data.id}">
+                                        <button class="btn btn-primary btn-sm edit-record" data-key="${data.id}">
                                             <i class="mdi mdi-pencil"></i> Edit
-                                        </butt>
+                                        </button>
                                         <button class="btn btn-danger btn-sm delete-record" data-key="${data.id}">
                                             <i class="mdi mdi-trash-can"></i> Delete
                                         </button>

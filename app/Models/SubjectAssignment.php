@@ -10,6 +10,7 @@ class SubjectAssignment extends Model
     use HasFactory;
     protected $table = 'subject_assignments';
     protected $fillable = ['subject_id', 'class_id', 'faculty_id', 'student_population'];
+    public $with = ['subject', 'class', 'faculty'];
 
     public function subject()
     {
@@ -24,5 +25,15 @@ class SubjectAssignment extends Model
     public function faculty()
     {
         return $this->belongsTo(Faculties::class);
+    }
+
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'student_subjects', 'subject_id', 'student_id');
+    }
+
+    public function class_schedule()
+    {
+        return $this->hasOne(ClassSchedule::class, 'sa_id', 'id');
     }
 }

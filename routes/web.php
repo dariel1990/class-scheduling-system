@@ -3,23 +3,26 @@
 use App\Models\Faculties;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\FacultyController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\CriteriaController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EvaluationController;
-use App\Http\Controllers\AcademicYearController;
-use App\Http\Controllers\ReportsController;
-use App\Http\Controllers\RoomController;
-use App\Http\Controllers\SettingsController;
-use App\Http\Controllers\SubjectStudentController;
 use App\Http\Controllers\SupervisorController;
+use App\Http\Controllers\AcademicYearController;
+use App\Http\Controllers\ClassSchedulerController;
+use App\Http\Controllers\StudentSubjectController;
+use App\Http\Controllers\SubjectStudentController;
+use App\Http\Controllers\SubjectAssignmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,7 +50,7 @@ Route::group(['middleware' => ['auth:web']], function () {
     Route::put('/edit/profile/{id}', [UserController::class, 'updateProfile'])->name('update.profile');
 
     Route::resource('roles', RoleController::class);
-
+    Route::get('/roles-list', [RoleController::class, 'list'])->name('role.list');
 
     //Settings
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
@@ -81,10 +84,29 @@ Route::group(['middleware' => ['auth:web']], function () {
     //Subject
     Route::get('/subject', [SubjectController::class, 'index'])->name('subject.index');
     Route::get('/subject/list', [SubjectController::class, 'list'])->name('subject.list');
+    Route::get('/get-all-subjects', [SubjectController::class, 'getAllSubjects']);
     Route::post('/subject/store', [SubjectController::class, 'store'])->name('subject.store');
     Route::get('/subject/edit/{id}', [SubjectController::class, 'edit'])->name('subject.edit');
     Route::put('/subject/{id}', [SubjectController::class, 'update'])->name('subject.update');
     Route::delete('/subject/{id}', [SubjectController::class, 'delete'])->name('subject.delete');
+
+    //Subject Assignment
+    Route::get('/subjects-assignments-to-class/{classId}', [SubjectAssignmentController::class, 'index'])->name('subject.assignment.index');
+    Route::get('/subject-assignment/list/{classId}', [SubjectAssignmentController::class, 'list'])->name('subject.assignment.list');
+    Route::post('/subject-assignment/store', [SubjectAssignmentController::class, 'store'])->name('subject.assignment.store');
+    Route::get('/subject-assignment/edit/{id}', [SubjectAssignmentController::class, 'edit'])->name('subject.assignment.edit');
+    Route::put('/subject-assignment/{id}', [SubjectAssignmentController::class, 'update'])->name('subject.assignment.update');
+    Route::delete('/subject-assignment/{id}', [SubjectAssignmentController::class, 'delete'])->name('subject.assignment.delete');
+
+    //StudentSubjects
+    Route::get('/students/{subjectId}', [StudentSubjectController::class, 'index'])->name('subject.students');
+    Route::post('/import/students', [StudentSubjectController::class, 'importStudents'])->name('students.import');
+
+    //Students
+    Route::post('/student', [StudentController::class, 'store'])->name('student.store');
+    Route::get('/student/{id}', [StudentController::class, 'edit'])->name('student.edit');
+    Route::put('/student/{id}', [StudentController::class, 'update'])->name('student.update');
+    Route::delete('/student/{id}/{subjectId}', [StudentController::class, 'delete'])->name('student.delete');
 
     //Rooms
     Route::get('/room', [RoomController::class, 'index'])->name('room.index');
@@ -101,6 +123,14 @@ Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/faculty/edit/{id}', [FacultyController::class, 'edit'])->name('faculty.edit');
     Route::put('/faculty/{id}', [FacultyController::class, 'update'])->name('faculty.update');
     Route::delete('/faculty/{id}', [FacultyController::class, 'delete'])->name('faculty.delete');
+
+    //Classe Schedules
+    Route::get('/classes-schedules', [ClassSchedulerController::class, 'index'])->name('class-schedules.index');
+    Route::get('/classes-schedules/list', [ClassSchedulerController::class, 'list'])->name('classes.list');
+    Route::post('/classes-schedules/store', [ClassSchedulerController::class, 'store'])->name('classes.store');
+    Route::get('/classes-schedules/edit/{id}', [ClassSchedulerController::class, 'edit'])->name('classes.edit');
+    Route::put('/classes-schedules/{id}', [ClassSchedulerController::class, 'update'])->name('classes.update');
+    Route::delete('/classes-schedules/{id}', [ClassSchedulerController::class, 'delete'])->name('classes.delete');
 
     Route::get('/all/students/{faculty_id}', function ($faculty_id) {
         $faculty = Faculties::with(['subjects.students' => function ($query) {

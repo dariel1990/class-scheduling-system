@@ -2,9 +2,12 @@
 
 namespace App\Imports;
 
+use App\Models\Student;
 use App\Models\Students;
 use App\Models\Subjects;
+use App\Models\StudentSubject;
 use App\Models\SubjectStudents;
+use App\Models\SubjectAssignment;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -41,26 +44,25 @@ class StudentImport implements ToModel, WithHeadingRow
         $firstname = implode(' ', array_slice($firstAndMiddle, 0, -1));
         $middleinitial = end($firstAndMiddle);
 
-        $existingStudent = Students::where('last_name', $lastname)
+        $existingStudent = Student::where('last_name', $lastname)
             ->where('first_name', $firstname)
             ->where('middle_name', $middleinitial)
             ->first();
 
         if ($existingStudent) {
-            $existingSubjectStudent = SubjectStudents::where('subject_id', $subjectId)
+            $existingSubjectStudent = StudentSubject::where('subject_id', $subjectId)
                 ->where('student_id', $existingStudent->id)
                 ->exists();
 
             if (!$existingSubjectStudent) {
-                $subjectCode = Subjects::find($subjectId);
+                StudentSubject::create([
+                    'subject_id' => $subjectId,
+                    'student_id' => $existingStudent->id,
+                ]);
 
-                $hasDuplicatedSubjects = $existingStudent->subjects->pluck('subject_code')->contains($subjectCode->subject_code);
-                if (!$hasDuplicatedSubjects) {
-                    SubjectStudents::create([
-                        'subject_id' => $subjectId,
-                        'student_id' => $existingStudent->id,
-                    ]);
-                }
+                $subjectCode = SubjectAssignment::find($subjectId);
+                $subjectCode->student_population = $subjectCode->student_population + 1;
+                $subjectCode->save();
 
                 return null;
             }
@@ -68,7 +70,7 @@ class StudentImport implements ToModel, WithHeadingRow
             return null;
         }
 
-        $students = Students::create([
+        $students = Student::create([
             'last_name'     => $lastname,
             'first_name'    => $firstname,
             'middle_name'   => $middleinitial,
@@ -77,10 +79,14 @@ class StudentImport implements ToModel, WithHeadingRow
             'section'       => $section,
         ]);
 
-        SubjectStudents::create([
+        StudentSubject::create([
             'subject_id' => $subjectId,
             'student_id' => $students->id,
         ]);
+
+        $subjectCode = SubjectAssignment::find($subjectId);
+        $subjectCode->student_population = $subjectCode->student_population + 1;
+        $subjectCode->save();
 
         // Insert the data into the students table
         return $students;

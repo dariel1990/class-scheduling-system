@@ -16,10 +16,7 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
 
-        $this->middleware('permission:dashboard', ['only' => ['index']]);
-        $this->middleware('permission:studentDashboard', ['only' => ['studentDashboard']]);
-        $this->middleware('permission:peerDashboard', ['only' => ['peerDashboard']]);
-        $this->middleware('permission:supervisorDashboard', ['only' => ['supervisorDashboard']]);
+        $this->middleware('permission:dashboard-read', ['only' => ['index']]);
     }
 
     /**

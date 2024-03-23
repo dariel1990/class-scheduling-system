@@ -27,9 +27,9 @@ class ClassesController extends Controller
         $this->departmentService    = $departmentService;
         $this->classesService       = $classesService;
 
-        $this->middleware('permission:class-list', ['only' => ['index']]);
+        $this->middleware('permission:class-read', ['only' => ['index']]);
         $this->middleware('permission:class-create', ['only' => ['store']]);
-        $this->middleware('permission:class-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:class-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:class-delete', ['only' => ['delete']]);
     }
 
@@ -50,6 +50,9 @@ class ClassesController extends Controller
             return (new DataTables)->of($data)
                 ->addColumn('short_name', function ($row) {
                     return $row->department->short_name;
+                })
+                ->addColumn('subject_count', function ($row) {
+                    return $row->subjects->count();
                 })
                 ->addColumn('department', function ($row) {
                     return $row->department->description;

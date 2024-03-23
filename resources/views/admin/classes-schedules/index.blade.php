@@ -27,7 +27,7 @@
                 <div class="card-header bg-transaparent border-primary border-bottom border-5 text-uppercase">
                     <div class="row">
                         <div class="col-6">
-                            <h3 class="mt-2">Classes</h3>
+                            <h3 class="mt-2">Class Schedules</h3>
                         </div>
                         <div class="col-6 text-end">
                             <button type="button" class="btn btn-primary text-uppercase" id="btnAddNewRecord">
@@ -42,9 +42,11 @@
                             <table class="table table-bordered w-100" id="dataTable">
                                 <thead>
                                     <tr class="table-light">
-                                        <th width="20%" class="text-truncate">Class</th>
-                                        <th width="40%" class="text-truncate">Department</th>
-                                        <th width="10%" class="text-truncate">No of Subjects</th>
+                                        <th width="10%" class="text-truncate">Subject</th>
+                                        <th width="30%" class="text-truncate">Assigned Faculty</th>
+                                        <th width="10%" class="text-truncate">Room</th>
+                                        <th width="20%" class="text-truncate">Schedule</th>
+                                        <th width="10%" class="text-truncate">Week Days</th>
                                         <th width="30%" class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -73,68 +75,79 @@
                         @csrf
                         <div class="row g-2">
                             <div class="mb-2 col-md-12 mt-0">
-                                <label for="con-mail">Department</label>
-                                <select class="form form-select" name="department_id" id="department_id">
-                                    <option selected value="" disabled>-- Select Department -- </option>
-                                    @foreach ($departments as $department)
-                                        <option value="{{ $department->id }}">{{ $department->short_name }}</option>
+                                <input type="hidden" name="academic_id" value="{{ $defaultAY->id }}">
+                                <label for="con-mail">Class</label>
+                                <select class="form form-select" name="class_id" id="class_id">
+                                    <option selected value="" disabled>-- Select Class -- </option>
+                                    @foreach ($classes as $class)
+                                        <option value="{{ $class->id }}">{{ $class->class_code }}</option>
                                     @endforeach
                                 </select>
-                                <div class='text-danger' id="department_id-error"></div>
+                                <div class='text-danger' id="class_id-error"></div>
                             </div>
                             <div class="mb-2 col-md-12 mt-0">
-                                <label for="con-mail">Course</label>
-                                {!! Form::text('course', null, [
-                                    'placeholder' => 'Input Course',
-                                    'class' => 'form-control',
-                                    'required',
-                                    'id' => 'course',
-                                    'autocomplete' => 'off',
-                                ]) !!}
-                                <div class='text-danger' id="course-error"></div>
-                            </div>
-                            <div class="mb-2 col-md-12 mt-0">
-                                <label for="con-mail">Year Level</label>
-                                <select class="form form-select" name="year_level" id="year_level">
-                                    <option selected value="1st Year">1st Year</option>
-                                    <option value="2nd Year">2nd Year</option>
-                                    <option value="3rd Year">3rd Year</option>
-                                    <option value="4th Year">4th Year</option>
-                                    <option value="5th Year">5th Year</option>
+                                <label for="con-mail">Subject</label>
+                                <select class="form form-select" name="sa_id" id="sa_id">
+                                    <option selected value="" disabled>-- Select Subject -- </option>
+
                                 </select>
-                                <div class='text-danger' id="year_level-error"></div>
+                                <div class='text-danger' id="sa_id-error"></div>
+                            </div>
+                            <div class="mb-2 col-md-8 mt-0">
+                                <input type="hidden" name="faculty_id">
+                                <label for="con-mail">Assigned Faculty</label>
+                                {!! Form::text('faculty', null, [
+                                    'class' => 'form-control',
+                                    'id' => 'faculty',
+                                    'autocomplete' => 'off',
+                                    'readonly' => 'true',
+                                ]) !!}
+                                <div class='text-danger' id="faculty_id-error"></div>
+                            </div>
+                            <div class="mb-2 col-md-4 mt-0">
+                                <label for="con-mail">Enrolled Students</label>
+                                {!! Form::text('student_population', null, [
+                                    'class' => 'form-control',
+                                    'id' => 'student_population',
+                                    'autocomplete' => 'off',
+                                    'readonly' => 'true',
+                                ]) !!}
+                                <div class='text-danger' id="student_population-error"></div>
                             </div>
                             <div class="mb-2 col-md-12 mt-0">
-                                <label for="con-mail">Section</label>
-                                {!! Form::text('section', null, [
-                                    'placeholder' => 'Section',
-                                    'class' => 'form-control',
-                                    'required',
-                                    'id' => 'section',
-                                    'autocomplete' => 'off',
-                                ]) !!}
-                                <div class='text-danger' id="section-error"></div>
+                                <label for="con-mail">Room</label>
+                                <select class="form form-select" name="room_id" id="room_id">
+                                    <option selected value="" disabled>-- Select Room -- </option>
+                                    @foreach ($rooms as $room)
+                                        <option value="{{ $room->id }}">
+                                            {{ $room->room_name }} - {{ $room->room_type }}
+                                            (Cap: {{ $room->capacity }} students)
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class='text-danger' id="room_id-error"></div>
+                            </div>
+                            <div class="mb-2 col-md-6 mt-0">
+                                <label for="con-mail">Start Time</label>
+                                <input type="time" class="form-control" name="start_time" id="start_time">
+                                <div class='text-danger' id="start_time-error"></div>
+                            </div>
+                            <div class="mb-2 col-md-6 mt-0">
+                                <label for="con-mail">End Time</label>
+                                <input type="time" class="form-control" name="end_time" id="end_time">
+                                <div class='text-danger' id="end_time-error"></div>
                             </div>
                             <div class="mb-2 col-md-12 mt-0">
-                                <label for="con-mail">Major</label>
-                                {!! Form::text('major', null, [
-                                    'placeholder' => 'Major (if applicable)',
-                                    'class' => 'form-control',
-                                    'id' => 'major',
-                                    'autocomplete' => 'off',
-                                ]) !!}
-                                <div class='text-danger' id="major-error"></div>
-                            </div>
-                            <div class="mb-2 col-md-12 mt-0">
-                                <label for="con-mail">Class Code</label>
-                                <input type="hidden" name="academic_id" value="{{ $defaultAY->id }}">
-                                {!! Form::text('class_code', null, [
-                                    'class' => 'form-control',
-                                    'readonly',
-                                    'id' => 'class_code',
-                                    'autocomplete' => 'off',
-                                ]) !!}
-                                <div class='text-danger' id="class_code-error"></div>
+                                <label for="con-name">Select Days</label>
+                                <select class="form form-select weekday-input" name="week_day[]" id="week_day"
+                                    multiple="multiple">
+                                    @foreach ($weekDays as $abbr => $day)
+                                        <option value="{{ $abbr }}">
+                                            {{ $day }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class='text-danger' id="week_day-error"></div>
                             </div>
                         </div>
                     </form>
@@ -162,12 +175,30 @@
         <script src="{{ asset('/assets/js/axios.min.js') }}"></script>
         <script>
             $(document).ready(function() {
+                let isEdit = false;
+
+                $('.weekday-input').select2({
+                    width: '100%',
+                    dropdownParent: $('#recordModal')
+                });
+
+                $('#class_id').select2({
+                    width: '100%',
+                    dropdownParent: $('#recordModal')
+                });
+
+                $('#sa_id').select2({
+                    width: '100%',
+                    dropdownParent: $('#recordModal')
+                });
+
                 const inputNames = [
-                    "department_id",
-                    "course",
-                    "year_level",
-                    "section",
-                    "class_code",
+                    "faculty",
+                    "student_population",
+                    "room_id",
+                    "start_time",
+                    "end_time",
+                    "week_day",
                 ];
 
                 let table = $('#dataTable').DataTable({
@@ -179,25 +210,39 @@
                     language: {
                         processing: '<i class="text-primary fa fa-spinner fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>',
                     },
-                    ajax: `/classes/list`,
+                    ajax: `/classes-schedules/list`,
                     columns: [{
                             class: 'align-middle text-center',
-                            data: 'class_code',
-                            name: 'class_code',
+                            data: 'subject',
+                            name: 'subject',
                             searchable: true,
                             orderable: false,
                         },
                         {
                             class: 'align-middle',
-                            data: 'department',
-                            name: 'department',
+                            data: 'faculty',
+                            name: 'faculty',
                             searchable: true,
                             orderable: false
                         },
                         {
                             class: 'align-middle text-center',
-                            data: 'subject_count',
-                            name: 'subject_count',
+                            data: 'room',
+                            name: 'room',
+                            searchable: true,
+                            orderable: false
+                        },
+                        {
+                            class: 'align-middle text-center',
+                            data: 'schedule',
+                            name: 'schedule',
+                            searchable: true,
+                            orderable: false
+                        },
+                        {
+                            class: 'align-middle text-center',
+                            data: 'week_days',
+                            name: 'week_days',
                             searchable: true,
                             orderable: false
                         },
@@ -210,13 +255,13 @@
                             render: function(_, _, data, row) {
                                 return `
                                     <td class='text-center align-middle'>
-                                        <a href="/subjects-assignments-to-class/${data.id}" class="btn btn-info btn-sm">
-                                            <i class="mdi mdi-eye"></i> View Subjects
+                                        <a href="/print-schedule/${data.sa_id}" class="btn btn-info btn-sm">
+                                            <i class="mdi mdi-printer"></i> Print Schedule
                                         </a>
-                                        <button class="btn btn-primary btn-sm edit-record" data-key="${data.id}">
+                                        <button class="btn btn-primary btn-sm edit-record" data-key="${data.sa_id}">
                                             <i class="mdi mdi-pencil"></i> Edit
                                         </button>
-                                        <button class="btn btn-danger btn-sm delete-record" data-key="${data.id}">
+                                        <button class="btn btn-danger btn-sm delete-record" data-key="${data.sa_id}">
                                             <i class="mdi mdi-trash-can"></i> Delete
                                         </button>
                                     </td>
@@ -226,36 +271,46 @@
                     ]
                 });
 
-                function classCode() {
-                    let major = $("#major").val().toUpperCase();
-                    let course = $("#course").val().toUpperCase();
-                    let yearLevel = $("#year_level").val();
-                    let section = $("#section").val().toUpperCase();
-                    let classcode = '';
-
-                    if (major == '') {
-                        classcode = `${course}-${yearLevel.charAt(0)}${section}`;
+                $('#class_id').change(function() {
+                    let classID = $(this).val();
+                    let route = '';
+                    if (isEdit) {
+                        route = `/api/subject-assignment-all/${classID}`;
                     } else {
-                        classcode = `${course}-${major}-${yearLevel.charAt(0)}${section}`;
+                        route = `/api/subject-assignment-no-cs/${classID}`;
                     }
 
-                    $("#class_code").val(classcode);
-                }
+                    axios.get(route).then((response) => {
+                        let records = response.data;
+                        let $select = $('#sa_id');
+                        // Clear existing options
+                        $select.empty();
+                        $select.append($('<option>', {
+                            value: '',
+                            disabled: true,
+                            selected: true,
+                            text: '-- Select Subjects --'
+                        }));
 
-                $('#course').keyup(function() {
-                    classCode();
+                        $.each(records, function(index, sa) {
+                            $select.append($('<option>', {
+                                value: sa.id,
+                                text: sa.subject.subject_code + ' - ' + sa.subject
+                                    .description
+                            }));
+                        });
+
+                    })
                 });
 
-                $('#year_level').change(function() {
-                    classCode();
-                });
-
-                $('#section').keyup(function() {
-                    classCode();
-                });
-
-                $('#major').keyup(function() {
-                    classCode();
+                $('#sa_id').change(function() {
+                    let saID = $(this).val();
+                    axios.get(`/api/subject-assigned-faculty/${saID}`).then((response) => {
+                        let records = response.data;
+                        $('#faculty_id').val(records.faculty_id);
+                        $('#faculty').val(records.faculty.fullname);
+                        $('#student_population').val(records.student_population);
+                    })
                 });
 
                 $('#btnAddNewRecord').click(function(e) {
@@ -263,9 +318,13 @@
                 });
 
                 $(document).on('click', '#btn-close-modal', function() {
+                    isEdit = false;
                     $("#btnSave").removeClass('d-none');
                     $("#btnSaveChanges").addClass('d-none');
                     $('.modal-title').text('Add New Record');
+                    $(`#sa_id`).empty().attr('disabled', false);
+                    $(`#class_id`).val('').trigger('change').attr('disabled', false);
+                    $('#week_day').val([]).trigger('change');
                     $.each(inputNames, function(index, value) {
                         $(`#${value}`).val('').removeClass("is-invalid");
                         $(`#${value}-error`).html("");
@@ -274,7 +333,7 @@
 
                 $('#btnSave').click(function() {
                     let data = $('#recordForm').serialize();
-                    axios.post(`/classes/store`, data).then((response) => {
+                    axios.post(`/classes-schedules/store`, data).then((response) => {
                         if (response.status === 200) {
                             //swal({
                             //text: 'New record saved.',
@@ -306,26 +365,38 @@
                 });
 
                 $(document).on('click', '.edit-record', function(e) {
+                    isEdit = true;
                     let id = $(this).attr('data-key');
                     $("#btnSave").addClass('d-none');
                     $("#btnSaveChanges").removeClass('d-none');
                     $("#btnSaveChanges").attr('data-key', id);
-                    axios.get(`/classes/edit/${id}`).then((response) => {
+                    axios.get(`/classes-schedules/edit/${id}`).then((response) => {
+                        let classID = response.data[0].subject_assignments.class_id;
+                        let saID = response.data[0].sa_id;
                         $('#recordModal').modal('toggle');
                         $('.modal-title').text('Edit Record');
-                        $('#department_id').val(response.data.department_id);
-                        $('#course').val(response.data.course);
-                        $('#year_level').val(response.data.year_level);
-                        $('#section').val(response.data.section);
-                        $('#major').val(response.data.major);
-                        $('#class_code').val(response.data.class_code);
+                        $('#class_id').val(classID).trigger('change');
+                        setTimeout(() => {
+                            $('#sa_id').val(saID).trigger('change');
+                        }, 500);
+                        $('#room_id').val(response.data[0].room_id);
+                        $('#start_time').val(response.data[0].start_time);
+                        $('#end_time').val(response.data[0].end_time);
+                        // Populate week_days
+                        let weekDays = response.data[0].week_days.split('-');
+                        $('#week_day').val(weekDays); // Set selected values
+
+                        // Refresh Select2
+                        $('#week_day').trigger('change');
+                        $('#class_id').attr('disabled', true);
+                        $('#sa_id').attr('disabled', true);
                     })
                 });
 
                 $('#btnSaveChanges').click(function() {
                     let id = $(this).attr('data-key');
                     let data = $('#recordForm').serialize();
-                    axios.put(`/classes/${id}`, data).then((response) => {
+                    axios.put(`/classes-schedules/${id}`, data).then((response) => {
                         if (response.status === 200) {
                             table.ajax.reload(null, false);
                             //swal({
@@ -369,7 +440,7 @@
                         closeOnClickOutside: false,
                     }).then((willDelete) => {
                         if (willDelete) {
-                            axios.delete(`/classes/${id}`).then((response) => {
+                            axios.delete(`/classes-schedules/${id}`).then((response) => {
                                 if (response.status === 200) {
                                     //swal({
                                     //text: 'Record deleted.',

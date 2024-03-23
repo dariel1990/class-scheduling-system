@@ -13,7 +13,7 @@ class ClassesService
 
     public function getAllClassesByDefaultAcademicYear($defaultPeriod)
     {
-        return Classes::with('department')->where('academic_id', $defaultPeriod)->get();
+        return Classes::with('department', 'subjects')->where('academic_id', $defaultPeriod)->get();
     }
 
     public function getClassesById($id)

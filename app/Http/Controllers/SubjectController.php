@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classes;
 use App\Models\Subjects;
 use Illuminate\Http\Request;
 use App\Services\SubjectService;
@@ -16,9 +17,9 @@ class SubjectController extends Controller
     {
         $this->subjectService       = $subjectService;
 
-        $this->middleware('permission:subject-list', ['only' => ['index']]);
+        $this->middleware('permission:subject-read', ['only' => ['index']]);
         $this->middleware('permission:subject-create', ['only' => ['store']]);
-        $this->middleware('permission:subject-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:subject-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:subject-delete', ['only' => ['delete']]);
     }
 
@@ -93,5 +94,32 @@ class SubjectController extends Controller
         } catch (QueryException $e) {
             return response()->json(['success' => $e]);
         }
+    }
+
+    public function notSelectedSubjects($classId)
+    {
+        $class = Classes::find($classId);
+        $subjectIds = $class->subjects()->pluck('subject_id')->toArray();
+
+        $filteredSubjects = Subjects::whereNotIn('id', $subjectIds)->get();
+        return $filteredSubjects;
+    }
+
+    public function subjectsOnEdit($classId, $subjectId)
+    {
+        $class = Classes::find($classId);
+        $subjectIds = $class->subjects()->pluck('subject_id')->toArray();
+
+        $filteredSubjectIds = array_filter($subjectIds, function ($id) use ($subjectId) {
+            return $id != $subjectId;
+        });
+
+        $filteredSubjects = Subjects::whereNotIn('id', $filteredSubjectIds)->get();
+        return $filteredSubjects;
+    }
+
+    public function getAllSubjects()
+    {
+        return $this->subjectService->getAllSubjects();
     }
 }

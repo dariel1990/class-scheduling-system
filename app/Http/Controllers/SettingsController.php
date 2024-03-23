@@ -9,13 +9,13 @@ class SettingsController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:settings-list', ['only' => ['index']]);
+        $this->middleware('permission:settings-read', ['only' => ['index']]);
         $this->middleware('permission:settings-update', ['only' => ['update']]);
     }
 
     public function index()
     {
-        $pageTitle ='Settings';
+        $pageTitle = 'Settings';
         $settings = Settings::get();
 
         return view('admin.settings.index', compact('pageTitle', 'settings'));
@@ -23,7 +23,7 @@ class SettingsController extends Controller
 
     public function update(Request $request, $keyName)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             $settings = Settings::where('Keyname', $keyName)->update([
                 'Keyvalue' => $request->keyValue,
             ]);

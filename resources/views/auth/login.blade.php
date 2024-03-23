@@ -4,7 +4,12 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6 col-xl-5">
-                    <div class="card overflow-hidden">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <img src="{{ asset('assets/images/NEMSU.png') }}" width="50%" alt="">
+                        </div>
+                    </div>
+                    <div class="card overflow-hidden mt-4">
                         <div class="bg-primary bg-soft">
                             <div class="row">
                                 <div class="col-7">

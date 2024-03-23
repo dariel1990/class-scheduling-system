@@ -20,9 +20,9 @@ class AcademicYearController extends Controller
     {
         $this->academicYearService  = $academicYearService;
 
-        $this->middleware('permission:period-list', ['only' => ['index']]);
+        $this->middleware('permission:period-read', ['only' => ['index']]);
         $this->middleware('permission:period-create', ['only' => ['store']]);
-        $this->middleware('permission:period-edit', ['only' => ['edit', 'update', 'updateDefaultStatus']]);
+        $this->middleware('permission:period-update', ['only' => ['edit', 'update', 'updateDefaultStatus']]);
         $this->middleware('permission:period-delete', ['only' => ['delete']]);
     }
 

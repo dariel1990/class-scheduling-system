@@ -14,9 +14,9 @@ class RoomController extends Controller
     {
         $this->roomService = $roomService;
 
-        $this->middleware('permission:subject-list', ['only' => ['index']]);
+        $this->middleware('permission:subject-read', ['only' => ['index']]);
         $this->middleware('permission:subject-create', ['only' => ['store']]);
-        $this->middleware('permission:subject-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:subject-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:subject-delete', ['only' => ['delete']]);
     }
 

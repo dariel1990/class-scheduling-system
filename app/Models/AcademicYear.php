@@ -17,8 +17,8 @@ class AcademicYear extends Model
         'isDefault',
     ];
 
-    public function evaluation()
+    public function class_schedules()
     {
-        return $this->hasMany(Evaluation::class, 'academic_id', 'id');
+        return $this->hasMany(ClassSchedule::class, 'academic_id', 'id');
     }
 }

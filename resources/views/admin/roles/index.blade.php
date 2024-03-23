@@ -25,20 +25,24 @@
         <div class="col-xxl-12 col-xl-12 col-lg-12 box-col-12">
             <div class="card">
                 <div class="card-header bg-transaparent border-primary border-bottom border-5 text-uppercase">
-                    <h3 class="mt-2">Roles</h3>
-                </div>
-                <div class="card-body p-2">
-                    <div class="py-2 text-end">
-                        <button type="button" class="btn btn-primary text-uppercase" id="btnAddNewRecord"> Add New
-                            Record </button>
+                    <div class="row">
+                        <div class="col-6">
+                            <h3 class="mt-2">Roles</h3>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button type="button" class="btn btn-primary text-uppercase" id="btnAddNewRecord">
+                                Add New Record
+                            </button>
+                        </div>
                     </div>
+                </div>
+                <div class="card-body p-4">
                     <div class="row">
                         <div class="col-sm-12 col-lg-12 col-xl-12">
                             <table class="table table-bordered w-100" id="dataTable">
                                 <thead>
                                     <tr class="table-light">
-                                        <th width="30%" class="text-truncate">Username</th>
-                                        <th width="30%" class="text-truncate">Role</th>
+                                        <th width="30%" class="text-truncate">Role Name</th>
                                         <th width="20%" class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -69,30 +73,61 @@
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <strong>Name:</strong>
-                                    {!! Form::text('name', null, ['placeholder' => 'Name', 'class' => 'form-control']) !!}
+                                    {!! Form::text('name', null, ['placeholder' => 'Name', 'class' => 'form-control', 'id' => 'name']) !!}
+                                    <small class="text-danger" id="name-error"></small>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="col-xs-12 col-sm-12 col-md-12 mt-3">
                                 <table class="table table-striped custom-table">
                                     <thead>
                                         <tr>
                                             <th>Module Permission</th>
-                                            <th class="text-center">List</th>
                                             <th class="text-center">Create</th>
+                                            <th class="text-center">Read</th>
                                             <th class="text-center">Update</th>
                                             <th class="text-center">Delete</th>
+                                            <th class="text-center">Import</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($groupedPermissions as $module => $permissions)
                                             <tr>
                                                 <td>{{ $module }}</td>
-                                                @foreach ($permissions as $permission)
-                                                    <td>
-                                                        {{ Form::checkbox('permission[]', $permission->id, true, ['class' => 'name']) }}
-                                                        {{ $permission->name }}
-                                                    </td>
-                                                @endforeach
+                                                <td class="text-center">
+                                                    @foreach ($permissions as $permission)
+                                                        @if (Str::contains($permission->name, 'create'))
+                                                            {{ Form::checkbox('permission[]', $permission->id, true, ['class' => 'name']) }}
+                                                        @endif
+                                                    @endforeach
+                                                </td>
+                                                <td class="text-center">
+                                                    @foreach ($permissions as $permission)
+                                                        @if (Str::contains($permission->name, 'read'))
+                                                            {{ Form::checkbox('permission[]', $permission->id, true, ['class' => 'name']) }}
+                                                        @endif
+                                                    @endforeach
+                                                </td>
+                                                <td class="text-center">
+                                                    @foreach ($permissions as $permission)
+                                                        @if (Str::contains($permission->name, 'update'))
+                                                            {{ Form::checkbox('permission[]', $permission->id, true, ['class' => 'name']) }}
+                                                        @endif
+                                                    @endforeach
+                                                </td>
+                                                <td class="text-center">
+                                                    @foreach ($permissions as $permission)
+                                                        @if (Str::contains($permission->name, 'delete'))
+                                                            {{ Form::checkbox('permission[]', $permission->id, true, ['class' => 'name']) }}
+                                                        @endif
+                                                    @endforeach
+                                                </td>
+                                                <td class="text-center">
+                                                    @foreach ($permissions as $permission)
+                                                        @if (Str::contains($permission->name, 'import'))
+                                                            {{ Form::checkbox('permission[]', $permission->id, true, ['class' => 'name']) }}
+                                                        @endif
+                                                    @endforeach
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -123,10 +158,7 @@
         <script>
             $(document).ready(function() {
                 const inputNames = [
-                    "username",
-                    "email",
-                    "password",
-                    "roles",
+                    "name",
                 ];
 
                 let table = $('#dataTable').DataTable({
@@ -134,20 +166,13 @@
                     processing: true,
                     destroy: true,
                     ordering: false,
-                    dom: "<'myfilter'f><'mylength'l>t",
+                    dom: "<'myfilter'f><'mylength'l>tp",
                     language: {
                         processing: '<i class="text-primary fa fa-spinner fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>',
                     },
-                    ajax: `/users-list`,
+                    ajax: `/roles-list`,
                     columns: [{
                             class: 'align-middle text-center',
-                            data: 'username',
-                            name: 'username',
-                            searchable: true,
-                            orderable: false,
-                        },
-                        {
-                            class: 'align-middle',
                             data: 'roles',
                             name: 'roles',
                             searchable: true,
@@ -162,9 +187,9 @@
                             render: function(_, _, data, row) {
                                 return `
                                     <td class='text-center align-middle'>
-                                        <button class="btn btn-primary btn-sm edit-record me-1" data-key="${data.id}">
+                                        <button class="btn btn-primary btn-sm edit-record" data-key="${data.id}">
                                             <i class="mdi mdi-pencil"></i> Edit
-                                        </butt>
+                                        </button>
                                         <button class="btn btn-danger btn-sm delete-record" data-key="${data.id}">
                                             <i class="mdi mdi-trash-can"></i> Delete
                                         </button>
@@ -186,13 +211,14 @@
                     $('#password').attr('disabled', false);
                     $.each(inputNames, function(index, value) {
                         $(`#${value}`).val('').removeClass("is-invalid");
-                        $(`#${value}-error`).removeAttr('style').html("");
+                        $(`#${value}-error`).html("");
+                        $(`input[name='permission[]']`).prop('checked', true);
                     });
                 });
 
                 $('#btnSave').click(function() {
                     let data = $('#recordForm').serialize();
-                    axios.post(`/users`, data).then((response) => {
+                    axios.post(`/roles`, data).then((response) => {
                         if (response.status === 200) {
                             //swal({
                             //text: 'New record saved.',
@@ -209,15 +235,14 @@
                             $.each(inputNames, function(index, value) {
                                 if (errors.hasOwnProperty(value)) {
                                     $(`#${value}`).addClass("is-invalid");
-                                    $(`#${value}-error`).attr('style', 'margin-left: 140px')
-                                        .html("");
+                                    $(`#${value}-error`).html("");
                                     $(`#${value}-error`).append(
                                         `${errors[value][0]}`
                                     );
                                 } else {
                                     $(`#${value}`).removeClass(
                                         "is-invalid");
-                                    $(`#${value}-error`).removeAttr('style').html("");
+                                    $(`#${value}-error`).html("");
                                 }
                             });
 
@@ -230,28 +255,36 @@
                     $("#btnSave").addClass('d-none');
                     $("#btnSaveChanges").removeClass('d-none');
                     $("#btnSaveChanges").attr('data-key', id);
-                    axios.get(`/users/${id}/edit`).then((response) => {
+                    axios.get(`/roles/${id}/edit`).then((response) => {
                         $('#recordModal').modal('toggle');
                         $('.modal-title').text('Edit Record');
-                        $('#password').attr('disabled', true);
-                        $('#username').val(response.data.username);
-                        $('#email').val(response.data.email);
-                        $('#roles').val(response.data.roles[0].id);
+                        $('#name').val(response.data.role.name);
+
+                        // Check checkboxes based on role permissions
+                        response.data.permissions.forEach(permission => {
+                            let checkbox = $(
+                                `input[name='permission[]'][value='${permission.id}']`);
+                            if (response.data.rolePermissions.includes(permission.id)) {
+                                checkbox.prop('checked', true);
+                            } else {
+                                checkbox.prop('checked', false);
+                            }
+                        });
                     })
                 });
 
                 $('#btnSaveChanges').click(function() {
                     let id = $(this).attr('data-key');
                     let data = $('#recordForm').serialize();
-                    axios.put(`/users/${id}`, data).then((response) => {
+                    axios.put(`/roles/${id}`, data).then((response) => {
                         if (response.status === 200) {
                             table.ajax.reload(null, false);
-                            //swal({
-                            //text: 'Changes been saved.',
-                            //icon: 'success',
-                            //timer: 2500,
-                            //buttons: false,
-                            //});
+                            swal({
+                                text: 'Changes been saved.',
+                                icon: 'success',
+                                timer: 2500,
+                                buttons: false,
+                            });
                             $('#btn-close-modal').trigger('click');
                         }
                     }).catch((error) => {
@@ -287,7 +320,7 @@
                         closeOnClickOutside: false,
                     }).then((willDelete) => {
                         if (willDelete) {
-                            axios.delete(`/users/${id}`).then((response) => {
+                            axios.delete(`/roles/${id}`).then((response) => {
                                 if (response.status === 200) {
                                     //swal({
                                     //text: 'Record deleted.',

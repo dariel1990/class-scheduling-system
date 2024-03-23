@@ -1,94 +1,136 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<!-- Mirrored from admin.pixelstrap.com/tivo/template/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 07 Feb 2023 03:13:05 GMT -->
+<!doctype html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ asset('/assets/images/favicon/favicon.png') }}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{ asset('/assets/images/favicon/favicon.png') }}" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <!-- CSRF Token -->
+    @stack('meta-data')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name') }}</title>
+
+    <link rel="icon" href="{{ asset('/assets/images/logo.png') }}">
+
     @stack('page-css')
-    <link rel="preconnect" href="https://fonts.googleapis.com/">
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/vendors/font-awesome.css') }}">
-    <link rel="stylesheet" type="text/css"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/vendors/icofont.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/vendors/themify.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/vendors/flag-icon.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/vendors/feather-icon.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/vendors/bootstrap.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/vendors/datatables.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/vendors/datatable-extension.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/color-1.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/responsive.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/vendors/scrollbar.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/vendors/animate.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/vendors/chartist.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/vendors/prism.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/vendors/vector-map.css') }}">
+
+    <link href="{{ asset('/assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{{ asset('/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{{ asset('/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+
+        .page-content {
+            min-height: 90vh !important;
+        }
+
+        .swal-input {
+            -webkit-appearance: none;
+            background-color: #fff;
+            border: none;
+            font-size: 14px;
+            display: block;
+            box-sizing: border-box;
+            width: 100%;
+            border: 1px solid rgba(0, 0, 0, .14);
+            padding: 10px 13px;
+            border-radius: 2px;
+            transition: border-color .2s;
+        }
+
+        body[data-sidebar="dark"].vertical-collpsed {
+            min-height: 100vh;
+        }
+    </style>
 </head>
 
-<body>
-    <!-- tap on top starts-->
-    <div class="tap-top"><i data-feather="chevrons-up"></i></div>
-    <!-- tap on tap ends-->
-    <!-- Loader starts-->
-    <div class="loader-wrapper">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"> </div>
-        <div class="dot"></div>
-    </div>
-    <!-- Loader ends-->
-    <!-- page-wrapper Start-->
-    <div class="page-wrapper compact-wrapper" id="pageWrapper">
-        <div class="page-body-wrapper p-5">
-            @yield('content')
+<div id='winboxParent'></div>
+
+<body data-sidebar="dark" class="{{ $class ?? '' }}">
+    {{-- PAGE LOADER --}}
+    <div id="preloader">
+        <div id="status">
+            <div class="spinner-chase">
+                <div class="chase-dot"></div>
+                <div class="chase-dot"></div>
+                <div class="chase-dot"></div>
+                <div class="chase-dot"></div>
+                <div class="chase-dot"></div>
+                <div class="chase-dot"></div>
+            </div>
         </div>
     </div>
-    <script src="{{ asset('/assets/js/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ asset('/assets/js/bootstrap/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('/assets/js/icons/feather-icon/feather.min.js') }}"></script>
-    <script src="{{ asset('/assets/js/icons/feather-icon/feather-icon.js') }}"></script>
-    <script src="{{ asset('/assets/js/config.js') }}"></script>
-    <!-- scrollbar js-->
-    <script src="{{ asset('/assets/js/scrollbar/simplebar.js') }}"></script>
-    <script src="{{ asset('/assets/js/scrollbar/custom.js') }}"></script>
-    <!-- Sidebar jquery-->
-    <script src="{{ asset('/assets/js/sidebar-menu.js') }}"></script>
-    <script src="{{ asset('/assets/js/chart/chartist/chartist.js') }}"></script>
-    <script src="{{ asset('/assets/js/chart/chartist/chartist-plugin-tooltip.js') }}"></script>
-    <script src="{{ asset('/assets/js/prism/prism.min.js') }}"></script>
-    <script src="{{ asset('/assets/js/clipboard/clipboard.min.js') }}"></script>
-    <script src="{{ asset('/assets/js/custom-card/custom-card.js') }}"></script>
-    <!-- Template js-->
-    <script src="{{ asset('/assets/js/script.js') }}"></script>
-    {{-- <script src="{{ asset('/assets/js/theme-customizer/customizer.js') }}"></script> --}}
-    <!-- login js-->
-    <script>
-        $(document).ready(function() {
-        // Get the CSRF token value from the meta tag
-        var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-        // Set the CSRF token as a default header for all AJAX requests
-        $.ajaxSetup({
-                headers: {
-                'X-CSRF-TOKEN': csrfToken
-                }
+    <main class="py-4">
+        <!-- Left Sidebar End -->
+        <div id="layout-wrapper">
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="page-content px-5 py-0">
+                <div class="container-fluid">
+                    @yield('content')
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="{{ asset('/assets/libs/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('/assets/libs/metismenu/metisMenu.min.js') }}"></script>
+    <script src="{{ asset('/assets/libs/simplebar/simplebar.min.js') }}"></script>
+    <script src="{{ asset('/assets/libs/node-waves/waves.min.js') }}"></script>
+    <script src="{{ asset('/assets/js/app.js') }}"></script>
+    <script src="{{ asset('assets/libs/winbox/winbox.bundle.js') }}"></script>
+    <script>
+        // WINBOX DIALOGS
+        const winboxBuild = (options) => {
+            new WinBox(options.title, {
+                root: options.root,
+                class: ["no-min"],
+                url: options.url,
+                index: 999999,
+                width: window.innerWidth - (options.width || 800),
+                height: window.innerHeight - (options.height || 200),
+                x: "center",
             });
+        };
+    </script>
+    <script>
+        function number_format(number, decimals, dec_point, thousands_sep) {
+            // Strip all characters but numerical ones.
+            number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
+            var n = !isFinite(+number) ? 0 : +number,
+                prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+                sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+                dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+                s = '',
+                toFixedFix = function(n, prec) {
+                    var k = Math.pow(10, prec);
+                    return '' + Math.round(n * k) / k;
+                };
+            // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+            s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+            if (s[0].length > 3) {
+                s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+            }
+            if ((s[1] || '').length < prec) {
+                s[1] = s[1] || '';
+                s[1] += new Array(prec - s[1].length + 1).join('0');
+            }
+            return s.join(dec);
+        }
+    </script>
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
         });
     </script>
     @stack('page-scripts')
 </body>
+
 </html>

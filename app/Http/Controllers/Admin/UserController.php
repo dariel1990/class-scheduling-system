@@ -22,9 +22,9 @@ class UserController extends Controller
     {
         $this->userService = $userService;
 
-        $this->middleware('permission:user-list', ['only' => ['index']]);
+        $this->middleware('permission:user-read', ['only' => ['index']]);
         $this->middleware('permission:user-create', ['only' => ['create', 'store']]);
-        $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:user-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
     }
 
@@ -41,6 +41,16 @@ class UserController extends Controller
         if (request()->ajax()) {
             $data = $this->userService->getAllUserExcludingLoggedInUser($userId);
             return (new DataTables)->of($data)
+                ->addColumn('fullname', function ($row) {
+                    $fullname = '';
+                    $roles = $row->getRoleNames()->first();
+                    if ($roles == 'Faculty') {
+                        $fullname = $row->faculty->fullname;
+                    } else if ($roles == 'Student') {
+                        $fullname = $row->student->fullname;
+                    }
+                    return  $fullname;
+                })
                 ->addColumn('roles', function ($row) {
                     return $row->getRoleNames()->first();
                 })
