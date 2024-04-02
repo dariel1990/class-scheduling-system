@@ -2,12 +2,12 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
-            font-family: 'Montserrat';
+            font-family: 'Arial';
         }
 
         .text-center {
@@ -40,13 +40,13 @@
         }
 
         th {
-            font-size: 12px;
+            font-size: 14px;
         }
 
         tbody td {
             border: 1px solid black;
             border-spacing: 0px;
-            font-size: 15px;
+            font-size: 16px;
         }
 
         span {
@@ -75,23 +75,25 @@
         <tr>
             <th class="text-end" style="border: none;" width="5%"></th>
             <th class="text-end" style="border: none;" width="15%"><img
-                    src="file:///laragon/www/facultyEvaluation/public/assets/images/NEMSU.png" width="85%"></th>
+                    src="{{ public_path('assets/images/NEMSU.png') }}" width="85%"></th>
             <th class="text-center" style="border: none;" width="60%">
                 <h3 class="text-center" style="margin-top: 0; margin-bottom: 0; ">Republic of the Philippines</h3>
                 <h2 class="text-center text-uppercase"
                     style="margin-top: 0; margin-bottom: 0; letter-spacing: 2px; color: #0d6efd;">
-                    {{ $settings['SCHOOL_NAME']->Keyvalue }}</h1>
-                    <h3 class="text-center" style="font-weight: bold; margin-top: 0; margin-bottom: 0;">
-                        {{ $settings['CAMPUS_NAME']->Keyvalue }}</h3>
-                    <h4 class="text-center" style="font-weight: normal; margin-top: 0; margin-bottom: 0;">
-                        {{ $settings['CAMPUS_ADDRESS']->Keyvalue }}</h4>
-                    <h4 class="text-center" style="font-weight: normal; margin-top: 0; margin-bottom: 0;">Website: <code
-                            style="color:blue">www.nemsu.edu.ph</code></h4>
-                    </td>
+                    {{ $settings['SCHOOL_NAME']->Keyvalue }}</h2>
+                <h3 class="text-center" style="font-weight: bold; margin-top: 0; margin-bottom: 0;">
+                    {{ $settings['CAMPUS_NAME']->Keyvalue }}</h3>
+                <h4 class="text-center" style="font-weight: normal; margin-top: 0; margin-bottom: 0;">
+                    {{ $settings['CAMPUS_ADDRESS']->Keyvalue }}</h4>
+                <h4 class="text-center" style="font-weight: normal; margin-top: 0; margin-bottom: 0;">Website: <code
+                        style="color:blue">www.nemsu.edu.ph</code></h4>
+            </th>
             <th class="text-start" style="border: none;" width="15%"><img
-                    src="file:///laragon/www/facultyEvaluation/public/assets/images/iso.png" width="100%"></th>
+                    src="{{ public_path('assets/images/iso.png') }}" width="100%"></th>
             <th class="text-end" style="border: none;" width="5%"></th>
         </tr>
+    </table>
+    <table width="100%">
         <tr>
             <th style="border: none;" colspan="6">
                 <hr>
@@ -178,9 +180,11 @@
             @endphp
             <tr>
                 <td class="text-center">{{ $sched->week_days }}</td>
-                <td class="text-center">{{ $start_time->format('h:i a') . ' - ' . $end_time->format('h:i a') }}</td>
+                <td class="text-center text-truncate">
+                    {{ $start_time->format('h:i a') . ' - ' . $end_time->format('h:i a') }}</td>
                 <td class="text-center">{{ $sched->subject_assignments->subject->subject_code }}</td>
-                <td class="text-center" width="20%">{{ $sched->subject_assignments->subject->description }}</td>
+                <td class="text-center text-truncate" width="20%">
+                    {{ $sched->subject_assignments->subject->description }}</td>
                 <td class="text-center">{{ $sched->subject_assignments->class->class_code }}</td>
                 <td class="text-center">{{ $sched->subject_assignments->student_population }}</td>
                 <td class="text-center">{{ $sched->subject_assignments->subject->units }}</td>
@@ -189,7 +193,7 @@
             </tr>
         @endforeach
         <tr>
-            <td class="text-center" colspan="2">TOTALS</td>
+            <td class="text-center" colspan="2">TOTAL UNITS</td>
             <td class="text-center">&nbsp;</td>
             <td class="text-center" width="20%">&nbsp;</td>
             <td class="text-center">&nbsp;</td>
@@ -244,5 +248,4 @@
             </td>
         </tr>
     </table>
-    </div>
 </body>

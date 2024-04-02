@@ -25,11 +25,17 @@ class Student extends Model
 
     public $appends = [
         'fullname',
+        'fullcourse',
     ];
 
     public function getFullnameAttribute()
     {
         return Str::upper($this->last_name) . ', ' . Str::upper($this->first_name) . ' ' . Str::upper($this->middle_name) . ' ' . Str::upper($this->suffix);
+    }
+
+    public function getFullcourseAttribute()
+    {
+        return Str::upper($this->course) . '' . Str::upper($this->year_level) . '' . Str::upper($this->section);
     }
 
     public function subjects()
