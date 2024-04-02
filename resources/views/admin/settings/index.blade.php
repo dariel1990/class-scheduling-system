@@ -14,13 +14,6 @@
                     <div class="pull-left">
                         <h2>{{ $pageTitle }}</h2>
                     </div>
-                    <div class="pull-right">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('home') }}"><i data-feather="home"></i></a>
-                            </li>
-                            <li class="breadcrumb-item active">Settings</li>
-                        </ol>
-                    </div>
                 </div>
             </div>
         </div>

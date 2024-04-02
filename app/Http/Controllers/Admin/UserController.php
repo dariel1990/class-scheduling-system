@@ -24,7 +24,7 @@ class UserController extends Controller
 
         $this->middleware('permission:user-read', ['only' => ['index']]);
         $this->middleware('permission:user-create', ['only' => ['create', 'store']]);
-        $this->middleware('permission:user-update', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:user-update', ['only' => ['edit', 'update', 'editProfile']]);
         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
     }
 
@@ -130,7 +130,17 @@ class UserController extends Controller
         $pageTitle = 'Edit Profile';
         $userProfile = $this->userService->getUserById(Auth::user()->id);
         $userRole = $userProfile->roles->first();
-        return view('admin.users.edit-profile', compact('userProfile', 'userRole', 'pageTitle'));
+        $layout = '';
+
+        if (Auth::user()->hasRole('Student')) {
+            $layout = 'app-student';
+        } elseif (Auth::user()->hasRole('Faculty')) {
+            $layout = 'app-faculty';
+        } elseif (Auth::user()->hasRole('Admin')) {
+            $layout = 'app';
+        }
+
+        return view('admin.users.edit-profile', compact('userProfile', 'userRole', 'pageTitle', 'layout'));
     }
 
     public function updateProfile(Request $request, $id)

@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('short_name');
             $table->string('description');
             $table->string('program_head');
+            $table->string('program_head_position');
+            $table->string('college_dean');
+            $table->string('college_dean_position');
             $table->timestamps();
         });
     }

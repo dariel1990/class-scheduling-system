@@ -56,13 +56,17 @@ class FacultyController extends Controller
         ]);
 
         $data = [
-            'department_id'         => $request->department_id,
-            'first_name'            => strtoupper($request->first_name),
-            'middle_name'           => strtoupper(substr($request->middle_name, 0, 1)),
-            'last_name'             => strtoupper($request->last_name),
-            'suffix'                => strtoupper($request->suffix),
-            'contact_no'            => $request->contact_no,
-            'employment_status'     => $request->employment_status,
+            'department_id'             => $request->department_id,
+            'first_name'                => strtoupper($request->first_name),
+            'middle_name'               => strtoupper(substr($request->middle_name, 0, 1)),
+            'last_name'                 => strtoupper($request->last_name),
+            'suffix'                    => strtoupper($request->suffix),
+            'contact_no'                => $request->contact_no,
+            'employment_status'         => $request->employment_status,
+            'years_in_service'          => $request->years_in_service,
+            'educational_qualification' => $request->educational_qualification,
+            'major'                     => $request->major,
+            'eligibility'               => $request->eligibility,
         ];
 
         $this->facultyService->createFaculties($data);
@@ -86,13 +90,17 @@ class FacultyController extends Controller
         ]);
 
         $data = [
-            'department_id'         => $request->department_id,
-            'first_name'            => strtoupper($request->first_name),
-            'middle_name'           => strtoupper(substr($request->middle_name, 0, 1)),
-            'last_name'             => strtoupper($request->last_name),
-            'suffix'                => strtoupper($request->suffix),
-            'contact_no'            => $request->contact_no,
-            'employment_status'     => $request->employment_status,
+            'department_id'             => $request->department_id,
+            'first_name'                => strtoupper($request->first_name),
+            'middle_name'               => strtoupper(substr($request->middle_name, 0, 1)),
+            'last_name'                 => strtoupper($request->last_name),
+            'suffix'                    => strtoupper($request->suffix),
+            'contact_no'                => $request->contact_no,
+            'employment_status'         => $request->employment_status,
+            'years_in_service'          => $request->years_in_service,
+            'educational_qualification' => $request->educational_qualification,
+            'major'                     => $request->major,
+            'eligibility'               => $request->eligibility,
         ];
 
         $this->facultyService->updateFaculties($id, $data);

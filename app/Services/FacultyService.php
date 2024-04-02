@@ -13,7 +13,7 @@ class FacultyService
 
     public function getFacultiesById($id)
     {
-        return Faculties::findOrFail($id);
+        return Faculties::with('subjects', 'department')->where('id', $id)->first();
     }
 
     public function createFaculties(array $data)

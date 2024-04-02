@@ -15,6 +15,9 @@ class Departments extends Model
         'short_name',
         'description',
         'program_head',
+        'program_head_position',
+        'college_dean',
+        'college_dean_position',
     ];
 
     public function faculty()

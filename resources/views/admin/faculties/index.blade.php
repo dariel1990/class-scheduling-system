@@ -136,6 +136,50 @@
                                 <div class='text-danger' id="contact_no-error-message"></div>
                             </div>
                             <div class="mb-2 col-md-6 mt-0">
+                                <label for="con-mail">Years in Service</label>
+                                {!! Form::text('years_in_service', null, [
+                                    'placeholder' => 'Enter years in service',
+                                    'class' => 'form-control years_in_service',
+                                    'required',
+                                    'id' => 'years_in_service',
+                                    'autocomplete' => 'off',
+                                ]) !!}
+                                <div class='text-danger' id="years_in_service-error-message"></div>
+                            </div>
+                            <div class="mb-2 col-md-6 mt-0">
+                                <label for="con-mail">Educational Qualification</label>
+                                {!! Form::text('educational_qualification', null, [
+                                    'placeholder' => 'Education',
+                                    'class' => 'form-control educational_qualification',
+                                    'required',
+                                    'id' => 'educational_qualification',
+                                    'autocomplete' => 'off',
+                                ]) !!}
+                                <div class='text-danger' id="educational_qualification-error-message"></div>
+                            </div>
+                            <div class="mb-2 col-md-6 mt-0">
+                                <label for="con-mail">Major</label>
+                                {!! Form::text('major', null, [
+                                    'placeholder' => 'Major',
+                                    'class' => 'form-control major',
+                                    'required',
+                                    'id' => 'major',
+                                    'autocomplete' => 'off',
+                                ]) !!}
+                                <div class='text-danger' id="major-error-message"></div>
+                            </div>
+                            <div class="mb-2 col-md-6 mt-0">
+                                <label for="con-mail">Eligibility</label>
+                                {!! Form::text('eligibility', null, [
+                                    'placeholder' => 'Eligibility/PRC',
+                                    'class' => 'form-control eligibility',
+                                    'required',
+                                    'id' => 'eligibility',
+                                    'autocomplete' => 'off',
+                                ]) !!}
+                                <div class='text-danger' id="eligibility-error-message"></div>
+                            </div>
+                            <div class="mb-2 col-md-6 mt-0">
                                 <label for="con-name">Employment Status</label>
                                 <select class="form form-select employment_status" name="employment_status"
                                     id="employment_status">
@@ -177,6 +221,10 @@
                     "suffix",
                     "contact_no",
                     "employment_status",
+                    "years_in_service",
+                    "educational_qualification",
+                    "major",
+                    "eligibility",
                 ];
 
                 let table = $('#dataTable').DataTable({
@@ -294,9 +342,17 @@
                     axios.get(`/faculty/edit/${id}`).then((response) => {
                         $('#recordModal').modal('toggle');
                         $('.modal-title').text('Edit Record');
-                        $('#room_name').val(response.data.room_name);
-                        $('#room_type').val(response.data.room_type);
-                        $('#capacity').val(response.data.capacity);
+                        $('#department_id').val(response.data.department_id);
+                        $('#first_name').val(response.data.first_name);
+                        $('#middle_name').val(response.data.middle_name);
+                        $('#last_name').val(response.data.last_name);
+                        $('#suffix').val(response.data.suffix);
+                        $('#contact_no').val(response.data.contact_no);
+                        $('#employment_status').val(response.data.employment_status);
+                        $('#years_in_service').val(response.data.years_in_service);
+                        $('#educational_qualification').val(response.data.educational_qualification);
+                        $('#major').val(response.data.major);
+                        $('#eligibility').val(response.data.eligibility);
                     })
                 });
 

@@ -21,6 +21,10 @@ return new class extends Migration
             $table->foreignId('department_id');
             $table->string('employment_status');
             $table->string('contact_no')->nullable();
+            $table->string('years_in_service')->nullable();
+            $table->string('educational_qualification')->nullable();
+            $table->string('major')->nullable();
+            $table->string('eligibility')->nullable();
             $table->timestamps();
         });
     }

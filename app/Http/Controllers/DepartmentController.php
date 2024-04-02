@@ -43,15 +43,21 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'short_name'        => 'required|unique:departments,short_name',
-            'description'       => 'required',
-            'program_head'      => 'required',
+            'short_name'                => 'required|unique:departments,short_name',
+            'description'               => 'required',
+            'program_head'              => 'required',
+            'program_head_position'     => 'required',
+            'college_dean'              => 'required',
+            'college_dean_position'     => 'required',
         ]);
 
         $data = [
-            'short_name'        => $request->short_name,
-            'description'       => $request->description,
-            'program_head'      => $request->program_head,
+            'short_name'                => $request->short_name,
+            'description'               => $request->description,
+            'program_head'              => $request->program_head,
+            'program_head_position'     => $request->program_head_position,
+            'college_dean'              => $request->college_dean,
+            'college_dean_position'     => $request->college_dean_position,
         ];
 
         $this->departmentService->createDepartments($data);
@@ -67,15 +73,21 @@ class DepartmentController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'short_name'        => 'required|unique:departments,short_name,' . $id,
-            'description'       => 'required',
-            'program_head'      => 'required',
+            'short_name'                => 'required|unique:departments,short_name,' . $id,
+            'description'               => 'required',
+            'program_head'              => 'required',
+            'program_head_position'     => 'required',
+            'college_dean'              => 'required',
+            'college_dean_position'     => 'required',
         ]);
 
         $data = [
-            'short_name'        => $request->short_name,
-            'description'       => $request->description,
-            'program_head'      => $request->program_head,
+            'short_name'                => $request->short_name,
+            'description'               => $request->description,
+            'program_head'              => $request->program_head,
+            'program_head_position'     => $request->program_head_position,
+            'college_dean'              => $request->college_dean,
+            'college_dean_position'     => $request->college_dean_position,
         ];
 
         $this->departmentService->updateDepartments($id, $data);

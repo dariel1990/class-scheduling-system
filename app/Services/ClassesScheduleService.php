@@ -44,6 +44,25 @@ class ClassesScheduleService
             ->get();
     }
 
+    public function getClassScheduleByFacultyIdAndAcademicYear($facultyId, $academicId)
+    {
+        return ClassSchedule::with('subject_assignments', 'academic_year', 'room')
+            ->whereHas('subject_assignments', function ($query) use ($facultyId) {
+                $query->where('faculty_id', $facultyId);
+            })
+            ->select(
+                'sa_id',
+                'academic_id',
+                'room_id',
+                'start_time',
+                'end_time',
+                DB::raw("GROUP_CONCAT(DISTINCT week_day ORDER BY week_day SEPARATOR '-') AS week_days")
+            )
+            ->where('academic_id', $academicId)
+            ->groupBy('sa_id', 'academic_id', 'room_id', 'start_time', 'end_time')
+            ->get();
+    }
+
     public function createClassSchedule(array $data)
     {
         return ClassSchedule::create($data);

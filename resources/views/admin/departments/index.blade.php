@@ -105,6 +105,39 @@
                                 ]) !!}
                                 <div class='text-danger' id="program_head-error"></div>
                             </div>
+                            <div class="mb-2 col-md-12 mt-0">
+                                <label for="con-mail">Program Head Position</label>
+                                {!! Form::text('program_head_position', null, [
+                                    'placeholder' => 'Program Head Position',
+                                    'class' => 'form-control program_head_position',
+                                    'required',
+                                    'id' => 'program_head_position',
+                                    'autocomplete' => 'off',
+                                ]) !!}
+                                <div class='text-danger' id="program_head_position-error"></div>
+                            </div>
+                            <div class="mb-2 col-md-12 mt-0">
+                                <label for="con-mail">College Dean</label>
+                                {!! Form::text('college_dean', null, [
+                                    'placeholder' => 'College Dean',
+                                    'class' => 'form-control college_dean',
+                                    'required',
+                                    'id' => 'college_dean',
+                                    'autocomplete' => 'off',
+                                ]) !!}
+                                <div class='text-danger' id="college_dean-error"></div>
+                            </div>
+                            <div class="mb-2 col-md-12 mt-0">
+                                <label for="con-mail">Position of College Dean</label>
+                                {!! Form::text('college_dean_position', null, [
+                                    'placeholder' => 'Dean Position',
+                                    'class' => 'form-control college_dean_position',
+                                    'required',
+                                    'id' => 'college_dean_position',
+                                    'autocomplete' => 'off',
+                                ]) !!}
+                                <div class='text-danger' id="college_dean_position-error"></div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -143,6 +176,9 @@
                     "short_name",
                     "description",
                     "program_head",
+                    "program_head_position",
+                    "college_dean",
+                    "college_dean_position",
                 ];
 
                 let table = $('#dataTable').DataTable({
@@ -262,6 +298,9 @@
                         $('#short_name').val(response.data.short_name);
                         $('#description').val(response.data.description);
                         $('#program_head').val(response.data.program_head);
+                        $('#program_head_position').val(response.data.program_head_position);
+                        $('#college_dean').val(response.data.college_dean);
+                        $('#college_dean_position').val(response.data.college_dean_position);
                     })
                 });
 

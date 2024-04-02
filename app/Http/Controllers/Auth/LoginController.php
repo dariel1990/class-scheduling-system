@@ -56,7 +56,9 @@ class LoginController extends Controller
     {
         if (Auth::check()) {
             // Check the user's role and redirect accordingly
-            if (Auth::user()->hasRole('Faculty')) {
+            if (Auth::user()->hasRole('Student')) {
+                return '/student-home';
+            } elseif (Auth::user()->hasRole('Faculty')) {
                 return '/faculty-home';
             } elseif (Auth::user()->hasRole('admin')) {
                 return $this->redirectTo;

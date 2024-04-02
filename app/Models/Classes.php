@@ -10,6 +10,7 @@ class Classes extends Model
     use HasFactory;
 
     public $table = 'classes';
+    public $with = ['subjects', 'academicYear', 'department'];
 
     protected $fillable = [
         'academic_id',

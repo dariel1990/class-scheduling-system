@@ -11,6 +11,8 @@ use App\Rules\RoomAvailabilityRule;
 use App\Services\AcademicYearService;
 use Illuminate\Database\QueryException;
 use App\Services\ClassesScheduleService;
+use App\Services\FacultyService;
+use App\Services\StudentService;
 use App\Services\SubjectAssignmentService;
 
 class ClassSchedulerController extends Controller
@@ -19,6 +21,8 @@ class ClassSchedulerController extends Controller
     public function __construct(
         private readonly AcademicYearService $academicYearService,
         private readonly RoomService $roomService,
+        private readonly StudentService $studentService,
+        private readonly FacultyService $facultyService,
         private readonly SubjectAssignmentService $subjectAssignmentService,
         private readonly ClassesService $classesService,
         ClassesScheduleService $classesScheduleService,
@@ -38,6 +42,8 @@ class ClassSchedulerController extends Controller
         $classes = $this->classesService->getAllClassesByDefaultAcademicYear($defaultAY->id);
         $academicYears = $this->academicYearService->getAllPeriod();
         $rooms = $this->roomService->getAllRoom();
+        $faculties = $this->facultyService->getAllFaculties();
+        $students = $this->studentService->getAllStudent();
 
         $weekDays = [
             'M' => 'Monday',
@@ -51,7 +57,7 @@ class ClassSchedulerController extends Controller
 
         return view(
             'admin.classes-schedules.index',
-            compact('defaultAY', 'pageTitle', 'academicYears', 'rooms', 'classes', 'weekDays')
+            compact('defaultAY', 'pageTitle', 'academicYears', 'rooms', 'classes', 'weekDays', 'faculties', 'students')
         );
     }
 

@@ -42,6 +42,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/student-home', [HomeController::class, 'studentDashboard'])->name('studentDashboard');
+Route::get('/faculty-home', [HomeController::class, 'facultyDashboard'])->name('facultyDashboard');
 
 Route::group(['middleware' => ['auth:web']], function () {
     Route::resource('users', UserController::class);
@@ -126,11 +128,15 @@ Route::group(['middleware' => ['auth:web']], function () {
 
     //Classe Schedules
     Route::get('/classes-schedules', [ClassSchedulerController::class, 'index'])->name('class-schedules.index');
-    Route::get('/classes-schedules/list', [ClassSchedulerController::class, 'list'])->name('classes.list');
-    Route::post('/classes-schedules/store', [ClassSchedulerController::class, 'store'])->name('classes.store');
-    Route::get('/classes-schedules/edit/{id}', [ClassSchedulerController::class, 'edit'])->name('classes.edit');
-    Route::put('/classes-schedules/{id}', [ClassSchedulerController::class, 'update'])->name('classes.update');
-    Route::delete('/classes-schedules/{id}', [ClassSchedulerController::class, 'delete'])->name('classes.delete');
+    Route::get('/classes-schedules/list', [ClassSchedulerController::class, 'list'])->name('class-schedules.list');
+    Route::post('/classes-schedules/store', [ClassSchedulerController::class, 'store'])->name('class-schedules.store');
+    Route::get('/classes-schedules/edit/{id}', [ClassSchedulerController::class, 'edit'])->name('class-schedules.edit');
+    Route::put('/classes-schedules/{id}', [ClassSchedulerController::class, 'update'])->name('class-schedules.update');
+    Route::delete('/classes-schedules/{id}', [ClassSchedulerController::class, 'delete'])->name('class-schedules.delete');
+
+    //Reports
+    Route::get('/reports/student-subjectload/{studentId}/{academicId}', [ReportsController::class, 'printStudentLoad'])->name('class-schedules.printStudentLoad');
+    Route::get('/reports/faculty-workload/{facultyId}/{academicId}', [ReportsController::class, 'printFacultyWorkload'])->name('class-schedules.printFacultyWorkload');
 
     Route::get('/all/students/{faculty_id}', function ($faculty_id) {
         $faculty = Faculties::with(['subjects.students' => function ($query) {

@@ -22,6 +22,10 @@ class Faculties extends Model
         'contact_no',
         'department_id',
         'employment_status',
+        'years_in_service',
+        'educational_qualification',
+        'major',
+        'eligibility',
     ];
 
     public $appends = [

@@ -15,27 +15,23 @@ class DepartmentSeeder extends Seeder
     {
         $departments = [
             [
-                'short_name'         => 'CITE',
-                'description'        => 'College of Information Technology Eduction',
-                'program_head'       => 'NONE',
-            ],
-            [
-                'short_name'         => 'CTE',
-                'description'        => 'College of Teacher Education',
-                'program_head'       => 'NONE',
-            ],
-            [
-                'short_name'         => 'CBM',
-                'description'        => 'College of Business Management',
-                'program_head'       => 'NONE',
+                'short_name'                => 'DCS',
+                'description'               => 'Department of Computer Studies',
+                'program_head'              => 'NELYNE LOURDES Y.PLAZA, Ph.D.',
+                'program_head_position'     => 'Dept. of Computer Studies Chair',
+                'college_dean'              => 'BORN CHRISTIAN A. ISIP, DTE',
+                'college_dean_position'     => 'Dean, CITE',
             ],
         ];
 
         foreach ($departments as $key => $value) {
             $departments = Departments::firstOrCreate([
-                'short_name'         => $value['short_name'],
-                'description'        => $value['description'],
-                'program_head'       => $value['program_head'],
+                'short_name'                => $value['short_name'],
+                'description'               => $value['description'],
+                'program_head'              => $value['program_head'],
+                'program_head_position'     => $value['program_head_position'],
+                'college_dean'              => $value['college_dean'],
+                'college_dean_position'     => $value['college_dean_position'],
             ]);
         }
     }

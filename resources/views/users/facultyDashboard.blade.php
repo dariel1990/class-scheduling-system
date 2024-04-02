@@ -1,11 +1,11 @@
-@extends('layouts.app-student')
+@extends('layouts.app-faculty')
 
 @section('content')
     <div class="container-fluid">
         <div class="page-title">
             <div class="row">
                 <div class="col-sm-6">
-                    <h3>Student Dashboard</h3>
+                    <h3>Faculty Dashboard</h3>
                 </div>
             </div>
         </div>
