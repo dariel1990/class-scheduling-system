@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SubjectController;
+use App\Services\ClassesScheduleService;
 use App\Services\SubjectAssignmentService;
 use App\Services\SubjectService;
 
@@ -34,4 +35,8 @@ Route::get('/subject-assignment-all/{classID}', function (SubjectAssignmentServi
 
 Route::get('/subject-assigned-faculty/{saId}', function (SubjectAssignmentService $subjectAssignmentService, $saId) {
     return $subjectAssignmentService->getSubjectAssignmentById($saId);
+});
+
+Route::get('/suggest-vacancy-for-room/{roomId}', function (ClassesScheduleService $classesScheduleService, $roomId) {
+    return $classesScheduleService->suggestVacantTimeSlotAndDayForRoom($roomId);
 });

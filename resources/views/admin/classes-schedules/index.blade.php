@@ -154,6 +154,20 @@
                             </div>
                         </div>
                     </form>
+                    <div class="card">
+                        <div class="card-header bg-transaparent border-primary border-bottom border-5 text-uppercase">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="mt-2 mb-0">Smart Suggestions:</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body shadow-lg">
+                            <ul class="room-vacancy-suggestion">
+
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <div class="float-right">
@@ -382,6 +396,18 @@
                         $('#faculty_id').val(records.faculty_id);
                         $('#faculty').val(records.faculty.fullname);
                         $('#student_population').val(records.student_population);
+                    })
+                });
+
+                $('#room_id').change(function() {
+                    let roomId = $(this).val();
+                    axios.get(`/api/suggest-vacancy-for-room/${roomId}`).then((response) => {
+                        let suggestions = response.data.split('\n');
+                        let listItems = '';
+                        suggestions.forEach((suggestion) => {
+                            listItems += `<li>${suggestion}</li>`;
+                        });
+                        $('.room-vacancy-suggestion').html(listItems);
                     })
                 });
 
