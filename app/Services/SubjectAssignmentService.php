@@ -11,6 +11,23 @@ class SubjectAssignmentService
         return SubjectAssignment::with(['subject', 'faculty', 'students'])->get();
     }
 
+    public function getAllSubjectAssignmentByDepartment($departmentId)
+    {
+        return SubjectAssignment::with(['subject', 'faculty', 'students', 'class'])
+            ->whereDoesntHave('class_schedule')
+            ->where('department_id', $departmentId)
+            ->get();
+    }
+
+    public function getAllSubjectAssignmentByFaculty($facultyId)
+    {
+        return SubjectAssignment::with(['subject', 'faculty', 'students', 'class'])
+            ->whereDoesntHave('class_schedule')
+            ->where('faculty_id', $facultyId)
+            ->get();
+    }
+
+
     public function getAllSubjectAssignmentByClass($classId)
     {
         return SubjectAssignment::with(['subject', 'faculty', 'students', 'class'])
@@ -30,6 +47,12 @@ class SubjectAssignmentService
     {
         return SubjectAssignment::with(['subject', 'faculty', 'students', 'class'])->where('id', $id)->first();
     }
+
+    public function getSubjectAssignmentByIdAll($id)
+    {
+        return SubjectAssignment::with(['subject', 'faculty', 'students', 'class'])->where('id', $id)->get();
+    }
+
 
     public function createSubjectAssignment(array $data)
     {

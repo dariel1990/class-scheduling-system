@@ -8,6 +8,7 @@ use App\Models\Faculties;
 use App\Models\Departments;
 use App\Models\AcademicYear;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Services\ClassesService;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
@@ -65,7 +66,12 @@ class ClassesController extends Controller
     {
         $this->validate($request, [
             'department_id' => 'required',
-            'class_code'    => 'required|unique:classes,class_code',
+            'class_code'    => [
+                'required',
+                Rule::unique('classes')->where(function ($query) use ($request) {
+                    return $query->where('academic_id', $request->academic_id);
+                }),
+            ],
             'course'        => 'required',
             'year_level'    => 'required',
             'section'       => 'required',

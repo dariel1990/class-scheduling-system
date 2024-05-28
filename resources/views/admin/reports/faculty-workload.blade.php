@@ -168,8 +168,9 @@
         @endphp
         @foreach ($schedules as $sched)
             @php
-                $start_time = Carbon\Carbon::parse($sched->start_time);
-                $end_time = Carbon\Carbon::parse($sched->end_time);
+                $start_time = Carbon\Carbon::parse($sched->time_slot->start_time);
+                $end_time = Carbon\Carbon::parse($sched->time_slot->end_time);
+                $days = $sched->time_slot->days;
 
                 $time_diff = $end_time->diffInMinutes($start_time);
                 $hours_decimal = $time_diff / 60;
@@ -179,7 +180,7 @@
                 $totalHours += $hours_decimal_formatted;
             @endphp
             <tr>
-                <td class="text-center">{{ $sched->week_days }}</td>
+                <td class="text-center">{{ $days }}</td>
                 <td class="text-center text-truncate">
                     {{ $start_time->format('h:i a') . ' - ' . $end_time->format('h:i a') }}</td>
                 <td class="text-center">{{ $sched->subject_assignments->subject->subject_code }}</td>

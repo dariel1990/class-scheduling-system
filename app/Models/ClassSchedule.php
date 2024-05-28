@@ -12,12 +12,11 @@ class ClassSchedule extends Model
     public $table = 'class_schedules';
 
     protected $fillable = [
+        'faculty_id',
         'sa_id',
         'academic_id',
         'room_id',
-        'start_time',
-        'end_time',
-        'week_day',
+        'time_slot_id'
     ];
 
     public function subject_assignments()
@@ -33,5 +32,15 @@ class ClassSchedule extends Model
     public function room()
     {
         return $this->belongsTo(Room::class, 'room_id', 'id');
+    }
+
+    public function faculty()
+    {
+        return $this->belongsTo(Faculties::class, 'faculty_id', 'id');
+    }
+
+    public function time_slot()
+    {
+        return $this->belongsTo(TimeSlots::class, 'time_slot_id', 'id');
     }
 }

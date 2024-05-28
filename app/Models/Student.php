@@ -64,5 +64,10 @@ class Student extends Model
 
             $user->assignRole([$role->id]);
         });
+
+        static::deleting(function ($student) {
+            $user = User::find($student->user_id);
+            $user->delete();
+        });
     }
 }

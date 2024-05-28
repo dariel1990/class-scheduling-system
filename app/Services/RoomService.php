@@ -8,7 +8,12 @@ class RoomService
 {
     public function getAllRoom()
     {
-        return Room::all();
+        return Room::with('department')->get();
+    }
+
+    public function getAllRoomByDepartment($id)
+    {
+        return Room::with('department')->where('department_id', $id)->get();
     }
 
     public function getRoomById($id)

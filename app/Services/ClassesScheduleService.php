@@ -16,73 +16,47 @@ class ClassesScheduleService
 
     public function getAllClassScheduleByDefaultAcademicYear($defaultPeriod)
     {
-        return ClassSchedule::with('subject_assignments', 'academic_year', 'room')
-            ->select(
-                'sa_id',
-                'academic_id',
-                'room_id',
-                'start_time',
-                'end_time',
-                DB::raw("GROUP_CONCAT(DISTINCT week_day ORDER BY week_day SEPARATOR '-') AS week_days")
-            )
+        return ClassSchedule::with('subject_assignments', 'academic_year', 'room', 'time_slot')
             ->where('academic_id', $defaultPeriod)
-            ->groupBy('sa_id', 'academic_id', 'room_id', 'start_time', 'end_time')
             ->get();
     }
 
     public function getClassScheduleById($sa_id)
     {
-        return ClassSchedule::with('subject_assignments', 'academic_year', 'room')
-            ->select(
-                'sa_id',
-                'academic_id',
-                'room_id',
-                'start_time',
-                'end_time',
-                DB::raw("GROUP_CONCAT(DISTINCT week_day ORDER BY week_day SEPARATOR '-') AS week_days")
-            )
+        return ClassSchedule::with('subject_assignments', 'academic_year', 'room', 'time_slot')
             ->where('sa_id', $sa_id)
-            ->groupBy('sa_id', 'academic_id', 'room_id', 'start_time', 'end_time')
             ->get();
     }
 
     public function getClassScheduleByFacultyIdAndAcademicYear($facultyId, $academicId)
     {
-        return ClassSchedule::with('subject_assignments', 'academic_year', 'room')
+        return ClassSchedule::with('subject_assignments', 'academic_year', 'room', 'time_slot')
             ->whereHas('subject_assignments', function ($query) use ($facultyId) {
                 $query->where('faculty_id', $facultyId);
             })
-            ->select(
-                'sa_id',
-                'academic_id',
-                'room_id',
-                'start_time',
-                'end_time',
-                DB::raw("GROUP_CONCAT(DISTINCT week_day ORDER BY week_day SEPARATOR '-') AS week_days")
-            )
             ->where('academic_id', $academicId)
-            ->groupBy('sa_id', 'academic_id', 'room_id', 'start_time', 'end_time')
             ->get();
     }
 
     public function getClassScheduleByStudentIdAndAcademicYear($studentId, $academicId)
     {
-        return ClassSchedule::with('subject_assignments', 'academic_year', 'room')
+        return ClassSchedule::with('subject_assignments', 'academic_year', 'room', 'time_slot')
             ->whereHas('subject_assignments', function ($query) use ($studentId) {
                 $query->whereHas('students', function ($subQuery) use ($studentId) {
                     $subQuery->where('students.id', $studentId);
                 });
             })
-            ->select(
-                'sa_id',
-                'academic_id',
-                'room_id',
-                'start_time',
-                'end_time',
-                DB::raw("GROUP_CONCAT(DISTINCT week_day ORDER BY week_day SEPARATOR '-') AS week_days")
-            )
             ->where('academic_id', $academicId)
-            ->groupBy('sa_id', 'academic_id', 'room_id', 'start_time', 'end_time')
+            ->get();
+    }
+
+    public function getClassScheduleByClassIdAndAcademicYear($classId, $academicId)
+    {
+        return ClassSchedule::with('subject_assignments', 'academic_year', 'room', 'time_slot')
+            ->whereHas('subject_assignments', function ($query) use ($classId) {
+                $query->where('class_id', $classId);
+            })
+            ->where('academic_id', $academicId)
             ->get();
     }
 
@@ -150,8 +124,8 @@ class ClassesScheduleService
             'W' => 'Wednesday',
             'Th' => 'Thursday',
             'F' => 'Friday',
-            'Sa' => 'Saturday',
-            'Su' => 'Sunday'
+            'Sat' => 'Saturday',
+            'Sun' => 'Sunday'
         ];
 
         $availableTimeSlots = [];

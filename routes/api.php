@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SubjectController;
 use App\Services\ClassesScheduleService;
+use App\Services\DepartmentService;
 use App\Services\SubjectAssignmentService;
 use App\Services\SubjectService;
 
@@ -38,5 +39,25 @@ Route::get('/subject-assigned-faculty/{saId}', function (SubjectAssignmentServic
 });
 
 Route::get('/suggest-vacancy-for-room/{roomId}', function (ClassesScheduleService $classesScheduleService, $roomId) {
+    return $classesScheduleService->suggestVacantTimeSlotAndDayForRoom($roomId);
+});
+
+Route::get('/get-department-subjects/{id}', function (SubjectAssignmentService $subjectAssignmentService, $departmentId) {
+    return $subjectAssignmentService->getAllSubjectAssignmentByDepartment($departmentId);
+});
+
+Route::get('/get-faculty-subjects/{id}', function (ClassesScheduleService $classesScheduleService, $roomId) {
+    return $classesScheduleService->suggestVacantTimeSlotAndDayForRoom($roomId);
+});
+
+Route::get('/get-classes-subjects/{id}', function (ClassesScheduleService $classesScheduleService, $roomId) {
+    return $classesScheduleService->suggestVacantTimeSlotAndDayForRoom($roomId);
+});
+
+Route::get('/get-rooms/{scheduleOption}/{id}', function (ClassesScheduleService $classesScheduleService, $roomId) {
+    return $classesScheduleService->suggestVacantTimeSlotAndDayForRoom($roomId);
+});
+
+Route::get('/get-time-slots', function (ClassesScheduleService $classesScheduleService, $roomId) {
     return $classesScheduleService->suggestVacantTimeSlotAndDayForRoom($roomId);
 });

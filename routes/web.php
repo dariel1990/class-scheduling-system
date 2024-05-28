@@ -12,6 +12,7 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\CriteriaController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\TimeSlotController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\ClassSchedulerController;
 use App\Http\Controllers\StudentSubjectController;
 use App\Http\Controllers\SubjectStudentController;
+use App\Http\Controllers\GeneticAlgorithmController;
 use App\Http\Controllers\SubjectAssignmentController;
 
 /*
@@ -118,6 +120,14 @@ Route::group(['middleware' => ['auth:web']], function () {
     Route::put('/room/{id}', [RoomController::class, 'update'])->name('room.update');
     Route::delete('/room/{id}', [RoomController::class, 'delete'])->name('room.delete');
 
+    //Time Slots
+    Route::get('/time-slot', [TimeSlotController::class, 'index'])->name('time-slot.index');
+    Route::get('/time-slot/list', [TimeSlotController::class, 'list'])->name('time-slot.list');
+    Route::post('/time-slot/store', [TimeSlotController::class, 'store'])->name('time-slot.store');
+    Route::get('/time-slot/edit/{id}', [TimeSlotController::class, 'edit'])->name('time-slot.edit');
+    Route::put('/time-slot/{id}', [TimeSlotController::class, 'update'])->name('time-slot.update');
+    Route::delete('/time-slot/{id}', [TimeSlotController::class, 'delete'])->name('time-slot.delete');
+
     //Faculty
     Route::get('/faculty', [FacultyController::class, 'index'])->name('faculty.index');
     Route::get('/faculty/list', [FacultyController::class, 'list'])->name('faculty.list');
@@ -128,15 +138,26 @@ Route::group(['middleware' => ['auth:web']], function () {
 
     //Classe Schedules
     Route::get('/classes-schedules', [ClassSchedulerController::class, 'index'])->name('class-schedules.index');
+    Route::get('/classes-schedules/genetic-algorithm', [ClassSchedulerController::class, 'geneticAlgorithm'])->name('class-schedules.geneticAlgorithm');
     Route::get('/classes-schedules/list', [ClassSchedulerController::class, 'list'])->name('class-schedules.list');
     Route::post('/classes-schedules/store', [ClassSchedulerController::class, 'store'])->name('class-schedules.store');
+    Route::post('/classes-schedules/store/group', [ClassSchedulerController::class, 'storeGroup']);
     Route::get('/classes-schedules/edit/{id}', [ClassSchedulerController::class, 'edit'])->name('class-schedules.edit');
     Route::put('/classes-schedules/{id}', [ClassSchedulerController::class, 'update'])->name('class-schedules.update');
     Route::delete('/classes-schedules/{id}', [ClassSchedulerController::class, 'delete'])->name('class-schedules.delete');
 
+
+    //genetic Algorithm
+    Route::get('/genetic-algorithm/{option}/{id}', [GeneticAlgorithmController::class, 'generateSchedule'])->name('genetic-algorithm.index');
+    Route::get('/smart-suggestion/{sa_id}/{faculty_id}', [GeneticAlgorithmController::class, 'suggestRoomAndTimeSlot'])->name('genetic-algorithm.index');
+
     //Reports
-    Route::get('/reports/student-subjectload/{studentId}/{academicId}', [ReportsController::class, 'printStudentLoad'])->name('class-schedules.printStudentLoad');
-    Route::get('/reports/faculty-workload/{facultyId}/{academicId}', [ReportsController::class, 'printFacultyWorkload'])->name('class-schedules.printFacultyWorkload');
+    Route::get('/reports/student-subjectload/{studentId}/{academicId}', [ReportsController::class, 'printStudentLoad'])
+        ->name('class-schedules.printStudentLoad');
+    Route::get('/reports/faculty-workload/{facultyId}/{academicId}', [ReportsController::class, 'printFacultyWorkload'])
+        ->name('class-schedules.printFacultyWorkload');
+    Route::get('/reports/class-subjectload/{classId}/{academicId}', [ReportsController::class, 'printClassLoad'])
+        ->name('class-schedules.printClassLoad');
 
     Route::get('/all/students/{faculty_id}', function ($faculty_id) {
         $faculty = Faculties::with(['subjects.students' => function ($query) {

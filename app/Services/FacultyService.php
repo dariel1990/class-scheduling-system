@@ -31,6 +31,6 @@ class FacultyService
 
     public function deleteFaculties($id)
     {
-        Faculties::findOrFail($id)->delete();
+        $record = Faculties::findOrFail($id)->delete();
     }
 }

@@ -3,12 +3,11 @@
 namespace App\Rules;
 
 use Closure;
-use App\Models\AcademicYear;
-use App\Models\ClassSchedule;
 use App\Models\TimeSlots;
+use App\Models\ClassSchedule;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class RoomAvailabilityRule implements ValidationRule
+class FacultyAvailabilityRule implements ValidationRule
 {
     protected $timeslot;
 
@@ -33,24 +32,25 @@ class RoomAvailabilityRule implements ValidationRule
         $end_time = $timeSlot->end_time;
         $days = $timeSlot->days;
 
-        $available = ClassSchedule::where('room_id', $value)
+        $available = ClassSchedule::where('faculty_id', $value)
             ->where(function ($query) use ($start_time, $end_time, $days) {
                 $query->whereHas('time_slot', function ($subQuery) use ($start_time, $end_time, $days) {
-                    $subQuery->where('days', $days)->where(function ($subSubQuery) use ($start_time, $end_time) {
-                        $subSubQuery->where(function ($subSubSubQuery) use ($start_time, $end_time) {
-                            $subSubSubQuery->where('start_time', '>=', $start_time)
-                                ->where('start_time', '<', $end_time);
-                        })->orWhere(function ($subSubSubQuery) use ($start_time, $end_time) {
-                            $subSubSubQuery->where('end_time', '>', $start_time)
-                                ->where('end_time', '<=', $end_time);
+                    $subQuery->where('days', $days)
+                        ->where(function ($subSubQuery) use ($start_time, $end_time) {
+                            $subSubQuery->where(function ($subSubSubQuery) use ($start_time, $end_time) {
+                                $subSubSubQuery->where('start_time', '>=', $start_time)
+                                    ->where('start_time', '<', $end_time);
+                            })->orWhere(function ($subSubSubQuery) use ($start_time, $end_time) {
+                                $subSubSubQuery->where('end_time', '>', $start_time)
+                                    ->where('end_time', '<=', $end_time);
+                            });
                         });
-                    });
                 });
             })
             ->doesntExist();
 
         if (!$available) {
-            $fail('The room is not available at the specified time');
+            $fail('Faculty is not available on the specified time.');
         }
     }
 }

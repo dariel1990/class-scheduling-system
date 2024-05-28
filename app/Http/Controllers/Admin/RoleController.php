@@ -46,6 +46,7 @@ class RoleController extends Controller
             'Class Management' => ['class-read', 'class-create', 'class-update', 'class-delete'],
             'Department Management' => ['department-read', 'department-create', 'department-update', 'department-delete'],
             'Faculty Management' => ['faculty-read', 'faculty-create', 'faculty-update', 'faculty-delete'],
+            'Room Management' => ['room-read', 'room-create', 'room-update', 'room-delete'],
             'Subject Management' => ['subject-read', 'subject-create', 'subject-update', 'subject-delete'],
             'Student Management' => ['student-read', 'student-create', 'student-update', 'student-delete', 'student-import'],
             'Settings' => ['settings-read', 'settings-update'],

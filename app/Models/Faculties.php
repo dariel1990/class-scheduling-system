@@ -48,6 +48,11 @@ class Faculties extends Model
         return $this->belongsTo(Departments::class, 'department_id', 'id');
     }
 
+    public function classSchedules()
+    {
+        return $this->hasMany(ClassSchedule::class, 'faculty_id', 'id');
+    }
+
     protected static function booted(): void
     {
         static::created(function (Faculties $faculty) {
@@ -66,7 +71,7 @@ class Faculties extends Model
             $user->assignRole([$role->id]);
         });
 
-        static::deleted(function ($faculty) {
+        static::deleting(function ($faculty) {
             $user = User::find($faculty->user_id);
             $user->delete();
         });

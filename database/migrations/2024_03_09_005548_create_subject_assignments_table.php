@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('subject_assignments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('subject_id')->references('id')->on('subjects')->restrictOnDelete();
-            $table->foreignId('faculty_id')->references('id')->on('faculties')->restrictOnDelete();
+            $table->foreignId('faculty_id')->nullable();
             $table->foreignId('class_id')->references('id')->on('classes')->restrictOnDelete();
             $table->integer('student_population')->nullable();
+            $table->foreignId('department_id');
             $table->timestamps();
         });
     }

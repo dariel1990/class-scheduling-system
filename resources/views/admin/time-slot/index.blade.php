@@ -27,13 +27,12 @@
                 <div class="card-header bg-transaparent border-primary border-bottom border-5 text-uppercase">
                     <div class="row">
                         <div class="col-6">
-                            <h3 class="mt-2">Subjects for {{ $class->class_code }}</h3>
+                            <h3 class="mt-2">{{ $pageTitle }}</h3>
                         </div>
                         <div class="col-6 text-end">
-                            <button type="button" class="btn btn-primary text-uppercase" id="btnAddNewRecord">Add Subjects
+                            <button type="button" class="btn btn-primary text-uppercase" id="btnAddNewRecord">
+                                Add New Record
                             </button>
-                            <a href="/classes" class="btn btn-warning text-dark text-uppercase">
-                                << Go back to Class List </a>
                         </div>
                     </div>
                 </div>
@@ -43,11 +42,10 @@
                             <table class="table table-bordered w-100" id="dataTable">
                                 <thead>
                                     <tr class="table-light">
-                                        <th width="15%" class="text-truncate">Subject Code</th>
-                                        <th width="30%" class="text-truncate">Description</th>
-                                        <th width="20%" class="text-truncate">Assigned Faculty</th>
-                                        <th width="5%" class="text-truncate">Enrolled Students</th>
-                                        <th width="30%" class="text-center">Action</th>
+                                        <th width="30%" class="text-truncate">Start Time</th>
+                                        <th width="20%" class="text-truncate">End Time</th>
+                                        <th width="20%" class="text-truncate">Days</th>
+                                        <th width="20%" class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -65,7 +63,7 @@
             <div class="modal-content rounded-0">
                 <div class="modal-header bg-dark ">
                     <span class="modal-title h4 text-uppercase text-white">
-                        Add Subject
+                        Add New Record
                     </span>
                     <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" id="btn-close-modal"
                         aria-label="Close"></button>
@@ -73,26 +71,28 @@
                 <div class="modal-body">
                     <form id="recordForm">
                         @csrf
-                        <input type="hidden" id="class_id" name="class_id" value="{{ $class->id }}">
                         <div class="row g-2">
-                            <div class="mb-2 col-md-12 mt-0">
-                                <label for="con-mail">Subjects</label>
-                                <select class="form-select" name="subject_id" id="subject_id" style="width: 100%">
-                                    <option selected value="" disabled>-- Select Subject -- </option>
-                                </select>
-                                <div class='text-danger' id="subject_id-error"></div>
+                            <div class="mb-2 col-md-6 mt-0">
+                                <label for="con-mail">Start Time</label>
+                                <input type="time" class="form-control" name="start_time" id="start_time">
+                                <div class='text-danger' id="start_time-error"></div>
+                            </div>
+                            <div class="mb-2 col-md-6 mt-0">
+                                <label for="con-mail">End Time</label>
+                                <input type="time" class="form-control" name="end_time" id="end_time">
+                                <div class='text-danger' id="end_time-error"></div>
                             </div>
                             <div class="mb-2 col-md-12 mt-0">
-                                <label for="con-mail">Assign a Faculty</label>
-                                <select class="form-select" name="faculty_id" id="faculty_id" style="width: 100%">
-                                    <option selected value="" disabled>-- Assign a Faculty -- </option>
-                                    @foreach ($faculties as $faculty)
-                                        <option data-department="{{ $faculty->department_id }}" value="{{ $faculty->id }}">
-                                            {{ $faculty->fullname }}</option>
+                                <label for="con-name">Select Days</label>
+                                <select class="form form-select weekday-input" name="days[]" id="days"
+                                    multiple="multiple">
+                                    @foreach ($weekDays as $abbr => $day)
+                                        <option value="{{ $abbr }}">
+                                            {{ $day }}
+                                        </option>
                                     @endforeach
                                 </select>
-                                <div class='text-danger' id="faculty_id-error"></div>
-                                <input type="hidden" name="department_id" id="department_id">
+                                <div class='text-danger' id="week_day-error"></div>
                             </div>
                         </div>
                     </form>
@@ -120,40 +120,15 @@
         <script src="{{ asset('/assets/js/axios.min.js') }}"></script>
         <script>
             $(document).ready(function() {
-                function isMobileOrTablet() {
-                    return window.innerWidth <= 768; // Adjust the threshold as needed
-                }
-
-                // Set initial values
-                let topPosition = 10;
-                let leftPosition = 265;
-
-                // Check if it's a mobile or tablet and update positions
-                if (isMobileOrTablet()) {
-                    topPosition = 0;
-                    leftPosition = 0;
-                }
-
-                if (isMobileOrTablet()) {
-                    topPosition = 0;
-                    leftPosition = 0;
-                }
+                $('.weekday-input').select2({
+                    width: '100%',
+                    dropdownParent: $('#recordModal')
+                });
 
                 const inputNames = [
-                    "subject_id",
-                    "faculty_id",
+                    "start_time",
+                    "end_time",
                 ];
-
-                const classID = $('#class_id').val();
-
-                $('#subject_id').select2({
-                    dropdownParent: $('#recordModal')
-                });
-
-                $('#faculty_id').select2({
-                    dropdownParent: $('#recordModal')
-                });
-
 
                 let table = $('#dataTable').DataTable({
                     serverSide: true,
@@ -164,32 +139,25 @@
                     language: {
                         processing: '<i class="text-primary fa fa-spinner fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>',
                     },
-                    ajax: `/subject-assignment/list/${classID}`,
+                    ajax: `/time-slot/list`,
                     columns: [{
                             class: 'align-middle text-center',
-                            data: 'subject',
-                            name: 'subject',
+                            data: 'start_time',
+                            name: 'start_time',
                             searchable: true,
                             orderable: false,
                         },
                         {
                             class: 'align-middle',
-                            data: 'description',
-                            name: 'description',
-                            searchable: true,
-                            orderable: false,
-                        },
-                        {
-                            class: 'align-middle',
-                            data: 'faculty',
-                            name: 'faculty',
+                            data: 'end_time',
+                            name: 'end_time',
                             searchable: true,
                             orderable: false
                         },
                         {
                             class: 'align-middle text-center',
-                            data: 'studentCount',
-                            name: 'studentCount',
+                            data: 'days',
+                            name: 'days',
                             searchable: true,
                             orderable: false
                         },
@@ -200,13 +168,9 @@
                             searchable: false,
                             orderable: false,
                             render: function(_, _, data, row) {
-                                console.log(data);
                                 return `
                                     <td class='text-center align-middle'>
-                                        <button class="btn btn-info btn-sm view-students" data-key="${data.id}" data-code="${data.subject}">
-                                            <i class="mdi mdi-eye"></i> View Enrolled Students
-                                        </button>
-                                        <button class="btn btn-primary btn-sm edit-record" data-key="${data.id}" data-subject-id="${data.subject_id}">
+                                        <button class="btn btn-primary btn-sm edit-record" data-key="${data.id}">
                                             <i class="mdi mdi-pencil"></i> Edit
                                         </button>
                                         <button class="btn btn-danger btn-sm delete-record" data-key="${data.id}">
@@ -221,47 +185,22 @@
 
                 $('#btnAddNewRecord').click(function(e) {
                     $('#recordModal').modal('toggle');
-                    axios.get(`/api/not-selected/subjects/${classID}`).then((response) => {
-                        let records = response.data;
-                        let $select = $('#subject_id');
-                        // Clear existing options
-                        $select.empty();
-                        $select.append($('<option>', {
-                            value: '',
-                            disabled: true,
-                            selected: true,
-                            text: '-- Select Subject --'
-                        }));
-
-                        $.each(records, function(index, subject) {
-                            $select.append($('<option>', {
-                                value: subject.id,
-                                text: subject.subject_code
-                            }));
-                        });
-                    })
-                    $('#faculty_id').val('').trigger('change');
                 });
 
                 $(document).on('click', '#btn-close-modal', function() {
                     $("#btnSave").removeClass('d-none');
                     $("#btnSaveChanges").addClass('d-none');
                     $('.modal-title').text('Add New Record');
+                    $('#days').val([]).trigger('change');
                     $.each(inputNames, function(index, value) {
                         $(`#${value}`).val('').removeClass("is-invalid");
                         $(`#${value}-error`).html("");
                     });
                 });
 
-                $(document).on('change', '#faculty_id', function() {
-                    let departmentID = $(this).find('option:selected').data('department');
-
-                    $("#department_id").val(departmentID);
-                });
-
                 $('#btnSave').click(function() {
                     let data = $('#recordForm').serialize();
-                    axios.post(`/subject-assignment/store`, data).then((response) => {
+                    axios.post(`/time-slot/store`, data).then((response) => {
                         if (response.status === 200) {
                             //swal({
                             //text: 'New record saved.',
@@ -294,40 +233,25 @@
 
                 $(document).on('click', '.edit-record', function(e) {
                     let id = $(this).attr('data-key');
-                    let subjectID = $(this).attr('data-subject-id');
-                    axios.get(`/api/subjects/on-edit/${classID}/${subjectID}`).then((response) => {
-                        let records = response.data;
-                        let $select = $('#subject_id');
-                        // Clear existing options
-                        $select.empty();
-                        $select.append($('<option>', {
-                            value: '',
-                            disabled: true,
-                            text: '-- Select Subject --'
-                        }));
-
-                        $.each(records, function(index, subject) {
-                            $select.append($('<option>', {
-                                value: subject.id,
-                                text: subject.subject_code
-                            }));
-                        });
-                    })
                     $("#btnSave").addClass('d-none');
                     $("#btnSaveChanges").removeClass('d-none');
                     $("#btnSaveChanges").attr('data-key', id);
-                    axios.get(`/subject-assignment/edit/${id}`).then((response) => {
+                    axios.get(`/time-slot/edit/${id}`).then((response) => {
                         $('#recordModal').modal('toggle');
                         $('.modal-title').text('Edit Record');
-                        $('#subject_id').val(response.data.subject_id).trigger('change');
-                        $('#faculty_id').val(response.data.faculty_id).trigger('change');
+                        $('#start_time').val(response.data.start_time);
+                        $('#end_time').val(response.data.end_time);
+                        // Split the days string into an array
+                        let selectedDays = response.data.days.split('-');
+                        $('#days').val(selectedDays);
+                        $('#days').trigger('change');
                     })
                 });
 
                 $('#btnSaveChanges').click(function() {
                     let id = $(this).attr('data-key');
                     let data = $('#recordForm').serialize();
-                    axios.put(`/subject-assignment/${id}`, data).then((response) => {
+                    axios.put(`/time-slot/${id}`, data).then((response) => {
                         if (response.status === 200) {
                             table.ajax.reload(null, false);
                             //swal({
@@ -371,7 +295,7 @@
                         closeOnClickOutside: false,
                     }).then((willDelete) => {
                         if (willDelete) {
-                            axios.delete(`/subject-assignment/${id}`).then((response) => {
+                            axios.delete(`/time-slot/${id}`).then((response) => {
                                 if (response.status === 200) {
                                     //swal({
                                     //text: 'Record deleted.',
@@ -382,28 +306,6 @@
                                     table.ajax.reload(null, false);
                                 }
                             })
-                        }
-                    });
-                });
-
-                $(document).on('click', '.view-students', function() {
-                    let subjectId = $(this).attr('data-key');
-                    let subjectCode = $(this).attr('data-code');
-
-                    box = new WinBox(`View Enrolled Students of ${subjectCode}`, {
-                        root: document.querySelector('.page-content'),
-                        class: ["no-min", "no-full", "no-move", "no-max"],
-                        url: `/students/${subjectId}?winbox=1`,
-                        index: 999999,
-                        background: "#2a3042",
-                        border: "0.3em",
-                        width: "100%",
-                        height: "95%",
-                        top: topPosition,
-                        left: leftPosition,
-                        right: 10,
-                        onclose: function(force) {
-                            table.ajax.reload(null, false);
                         }
                     });
                 });

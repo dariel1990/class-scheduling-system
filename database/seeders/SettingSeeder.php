@@ -42,6 +42,14 @@ class SettingSeeder extends Seeder
                 'Keyname'   => 'ASSISTANT_CAMPUS_DIRECTOR_POSITION',
                 'Keyvalue'  => 'Assistant Campus Director',
             ],
+            [
+                'Keyname'   => 'REGISTRAR',
+                'Keyvalue'  => 'RAMONALIZA A. ESPENIDO, MST-SS',
+            ],
+            [
+                'Keyname'   => 'REGISTRAR_POSITION',
+                'Keyvalue'  => 'Registrar III',
+            ],
 
         ];
 

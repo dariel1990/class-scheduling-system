@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Criteria;
 use App\Models\Settings;
 use Illuminate\Http\Request;
 use App\Services\RoomService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Services\ClassesService;
 use App\Services\FacultyService;
 use App\Services\StudentService;
@@ -13,7 +15,6 @@ use Illuminate\Support\Facades\App;
 use App\Services\AcademicYearService;
 use App\Services\ClassesScheduleService;
 use App\Services\SubjectAssignmentService;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportsController extends Controller
 {
@@ -75,6 +76,49 @@ class ReportsController extends Controller
             'student',
             'settings',
             'schedules',
+        ))->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
+        return $pdf->stream();
+    }
+
+    public function printClassLoad($classId, $academicId)
+    {
+        $settings = [
+            'SCHOOL_NAME'                           => Settings::where('Keyname', 'SCHOOL_NAME')->first(),
+            'CAMPUS_NAME'                           => Settings::where('Keyname', 'CAMPUS_NAME')->first(),
+            'CAMPUS_ADDRESS'                        => Settings::where('Keyname', 'CAMPUS_ADDRESS')->first(),
+            'ASSISTANT_CAMPUS_DIRECTOR'             => Settings::where('Keyname', 'ASSISTANT_CAMPUS_DIRECTOR')->first(),
+            'ASSISTANT_CAMPUS_DIRECTOR_POSITION'    => Settings::where('Keyname', 'ASSISTANT_CAMPUS_DIRECTOR_POSITION')->first(),
+            'CAMPUS_DIRECTOR'                       => Settings::where('Keyname', 'CAMPUS_DIRECTOR')->first(),
+            'CAMPUS_DIRECTOR_POSITION'              => Settings::where('Keyname', 'CAMPUS_DIRECTOR_POSITION')->first(),
+            'REGISTRAR'                             => Settings::where('Keyname', 'REGISTRAR')->first(),
+            'REGISTRAR_POSITION'                    => Settings::where('Keyname', 'REGISTRAR_POSITION')->first(),
+        ];
+
+        $defaultPeriod = $this->academicYearService->getPeriodById($academicId);
+        $classes = $this->classesService->getClassesById($classId);
+        $schedules = $this->classesScheduleService->getClassScheduleByClassIdAndAcademicYear($classId, $academicId);
+
+        // Grouping schedules by days and then by AM/PM
+        $groupedSchedules = [];
+        foreach ($schedules as $sched) {
+            $days = $sched->time_slot->days;
+            $startTime = Carbon::parse($sched->time_slot->start_time);
+            $timeOfDay = $startTime->format('A'); // AM or PM
+
+            if (!isset($groupedSchedules[$days])) {
+                $groupedSchedules[$days] = ['AM' => [], 'PM' => []];
+            }
+            $groupedSchedules[$days][$timeOfDay][] = $sched;
+        }
+
+
+        $pdf = Pdf::loadView('admin.reports.class-subjectload', compact(
+            'defaultPeriod',
+            'classes',
+            'settings',
+            'schedules',
+            'groupedSchedules'
         ))->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
         return $pdf->stream();

@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rooms', function (Blueprint $table) {
+        Schema::create('time_slots', function (Blueprint $table) {
             $table->id();
-            $table->string('room_name');
-            $table->enum('room_type', ['Laboratory', 'Lecture']);
-            $table->integer('capacity');
-            $table->foreignId('department_id');
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->string('days');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rooms');
+        Schema::dropIfExists('time_slots');
     }
 };

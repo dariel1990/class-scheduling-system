@@ -79,6 +79,7 @@ class SubjectAssignmentController extends Controller
             'subject_id'            => $request->subject_id,
             'faculty_id'            => $request->faculty_id,
             'student_population'    => 0,
+            'department_id'         => $request->department_id,
         ];
 
         $this->subjectAssignmentService->createSubjectAssignment($data);
@@ -102,6 +103,7 @@ class SubjectAssignmentController extends Controller
             'class_id'  => $request->class_id,
             'subject_id'   => $request->subject_id,
             'faculty_id'      => $request->faculty_id,
+            'department_id'         => $request->department_id,
         ];
 
         $this->subjectAssignmentService->updateSubjectAssignment($id, $data);

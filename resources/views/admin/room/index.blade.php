@@ -42,9 +42,10 @@
                             <table class="table table-bordered w-100" id="dataTable">
                                 <thead>
                                     <tr class="table-light">
-                                        <th width="30%" class="text-truncate">Room Name</th>
-                                        <th width="30%" class="text-truncate">Room Type</th>
-                                        <th width="20%" class="text-truncate">Capacity</th>
+                                        <th width="30%" class="text-truncate">Department</th>
+                                        <th width="20%" class="text-truncate">Room Name</th>
+                                        <th width="20%" class="text-truncate">Room Type</th>
+                                        <th width="10%" class="text-truncate">Capacity</th>
                                         <th width="20%" class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -73,6 +74,16 @@
                         @csrf
                         <div class="row g-2">
                             <div class="mb-2 col-md-12 mt-0">
+                                <label for="con-mail">Department</label>
+                                <select class="form form-select" name="department_id" id="department_id">
+                                    <option selected value="" disabled>-- Select Department -- </option>
+                                    @foreach ($departments as $department)
+                                        <option value="{{ $department->id }}">{{ $department->short_name }}</option>
+                                    @endforeach
+                                </select>
+                                <div class='text-danger' id="department_id-error"></div>
+                            </div>
+                            <div class="mb-2 col-md-12 mt-0">
                                 <label>Room Name</label>
                                 {!! Form::text('room_name', null, [
                                     'placeholder' => 'Input Room Name',
@@ -85,8 +96,8 @@
                             <div class="mb-2 col-md-12 mt-0">
                                 <label for="con-mail">Room Type</label>
                                 <select class="form form-select" name="room_type" id="room_type">
-                                    <option selected value="Laboratory">Laboratory</option>
-                                    <option value="Lecture">Lecture</option>
+                                    <option selected value="Lecture">Lecture</option>
+                                    <option value="Laboratory">Laboratory</option>
                                 </select>
                                 <div class='text-danger' id="room_type-error"></div>
                             </div>
@@ -143,6 +154,13 @@
                     },
                     ajax: `/room/list`,
                     columns: [{
+                            class: 'align-middle text-center',
+                            data: 'department',
+                            name: 'department',
+                            searchable: true,
+                            orderable: false
+                        },
+                        {
                             class: 'align-middle text-center',
                             data: 'room_name',
                             name: 'room_name',
@@ -243,6 +261,7 @@
                         $('#room_name').val(response.data.room_name);
                         $('#room_type').val(response.data.room_type);
                         $('#capacity').val(response.data.capacity);
+                        $('#department_id').val(response.data.department_id);
                     })
                 });
 

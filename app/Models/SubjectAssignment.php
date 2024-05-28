@@ -9,7 +9,7 @@ class SubjectAssignment extends Model
 {
     use HasFactory;
     protected $table = 'subject_assignments';
-    protected $fillable = ['subject_id', 'class_id', 'faculty_id', 'student_population'];
+    protected $fillable = ['subject_id', 'class_id', 'faculty_id', 'student_population', 'department_id'];
     public $with = ['subject', 'class', 'faculty'];
 
     public function subject()

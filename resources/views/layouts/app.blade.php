@@ -206,6 +206,12 @@
                                 <span key="t-calendar">Rooms</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('time-slot.index') }}" class="waves-effect">
+                                <i class="bx bx-time"></i>
+                                <span key="t-calendar">Time Slots</span>
+                            </a>
+                        </li>
                     </ul>
                     <ul class="metismenu list-unstyled" id="side-menu">
                         <li>
